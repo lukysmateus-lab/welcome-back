@@ -109,7 +109,10 @@
             position: relative; width: 100%; height: 100%; text-align: center; transition: transform 0.6s; transform-style: preserve-3d;
         }
         .mem-card.flipped .mem-card-inner { transform: rotateY(180deg); }
-        .mem-card.matched .mem-card-inner { transform: rotateY(180deg); opacity: 0.3; cursor: default; }
+        .mem-card.matched .mem-card-inner { transform: rotateY(180deg); cursor: default; }
+        .mem-card.matched .mem-back { border-color: #22c55e; background-color: #f0fdf4; box-shadow: 0 0 15px rgba(34,197,94,0.4); color: #166534; }
+        .team-active { outline: 4px solid #f59e0b; transform: scale(1.05); }
+        
         .mem-front, .mem-back {
             position: absolute; width: 100%; height: 100%; backface-visibility: hidden; display: flex; align-items: center; justify-content: center; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); font-weight: 800; padding: 5px;
         }
@@ -255,7 +258,19 @@
         <div class="max-w-5xl mx-auto w-full">
             <div class="text-center mb-10">
                 <h2 class="text-5xl font-black title-font text-emerald-600 mb-4"><i class="fas fa-puzzle-piece mr-3"></i> Memory Match</h2>
-                <p class="text-slate-600 text-xl font-bold">Match the Nutrient to its Function or Location!</p>
+                <p class="text-slate-600 text-xl font-bold mb-6">Match the Nutrient to its Function or Location!</p>
+                
+                <div class="flex justify-center gap-12 mb-8 bg-white p-4 rounded-2xl border-4 border-emerald-200 max-w-2xl mx-auto shadow-sm">
+                    <div id="mem-team1-box" class="text-center p-4 rounded-xl transition-all duration-300 team-active" style="background-color: #e0f2fe;">
+                        <div class="bg-cyan-500 text-white font-black px-6 py-1 rounded mb-2 text-xl title-font">Team 1</div>
+                        <div class="text-5xl font-black title-font text-slate-800" id="mem-score1">0</div>
+                    </div>
+                    <div class="w-1 bg-slate-200 rounded"></div>
+                    <div id="mem-team2-box" class="text-center p-4 rounded-xl transition-all duration-300">
+                        <div class="bg-amber-400 text-white font-black px-6 py-1 rounded mb-2 text-xl title-font">Team 2</div>
+                        <div class="text-5xl font-black title-font text-slate-800" id="mem-score2">0</div>
+                    </div>
+                </div>
             </div>
 
             <!-- 20 Cards Grid -->
@@ -613,6 +628,15 @@
         let lockBoard = false;
         let firstCard, secondCard;
         let memMatches = 0;
+        let memScores = { team1: 0, team2: 0 };
+        let currentMemTeam = 1;
+
+        function updateMemTurnUI() {
+            document.getElementById('mem-team1-box').classList.toggle('team-active', currentMemTeam === 1);
+            document.getElementById('mem-team2-box').classList.toggle('team-active', currentMemTeam === 2);
+            document.getElementById('mem-team1-box').style.backgroundColor = currentMemTeam === 1 ? '#e0f2fe' : 'transparent';
+            document.getElementById('mem-team2-box').style.backgroundColor = currentMemTeam === 2 ? '#fef3c7' : 'transparent';
+        }
 
         function createMemBoard() {
             const board = document.getElementById('mem-board');
@@ -653,7 +677,17 @@
 
         function checkMemMatch() {
             let isMatch = firstCard.dataset.framework === secondCard.dataset.framework;
-            isMatch ? disableMemCards() : unflipMemCards();
+            if(isMatch) {
+                disableMemCards();
+                // Award points to the current team
+                if (currentMemTeam === 1) memScores.team1++;
+                else memScores.team2++;
+                
+                document.getElementById('mem-score1').innerText = memScores.team1;
+                document.getElementById('mem-score2').innerText = memScores.team2;
+            } else {
+                unflipMemCards();
+            }
         }
 
         function disableMemCards() {
@@ -664,7 +698,13 @@
             resetMemBoardState();
             memMatches++;
             if(memMatches === 10) { // 10 pairs
-                document.getElementById('mem-msg').classList.remove('hidden');
+                let winnerText = "It's a tie!";
+                if (memScores.team1 > memScores.team2) winnerText = "Team 1 Wins!";
+                if (memScores.team2 > memScores.team1) winnerText = "Team 2 Wins!";
+                
+                const msgEl = document.getElementById('mem-msg');
+                msgEl.innerHTML = `All Matched! ${winnerText} <i class="fas fa-trophy ml-2 text-yellow-400"></i>`;
+                msgEl.classList.remove('hidden');
             }
         }
 
@@ -673,6 +713,11 @@
             setTimeout(() => {
                 firstCard.classList.remove('flipped');
                 secondCard.classList.remove('flipped');
+                
+                // Change turns on a miss
+                currentMemTeam = currentMemTeam === 1 ? 2 : 1;
+                updateMemTurnUI();
+                
                 resetMemBoardState();
             }, 1000);
         }
@@ -684,6 +729,11 @@
 
         function resetMemory() {
             memMatches = 0;
+            memScores = { team1: 0, team2: 0 };
+            currentMemTeam = 1;
+            document.getElementById('mem-score1').innerText = memScores.team1;
+            document.getElementById('mem-score2').innerText = memScores.team2;
+            updateMemTurnUI();
             document.getElementById('mem-msg').classList.add('hidden');
             createMemBoard();
         }
