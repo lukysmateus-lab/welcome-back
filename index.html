@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome Back! - Leonardo Da Vinci</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Tone.js for Audio -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Nunito:wght@400;600;800&display=swap');
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background-color: #f0fdfa; /* Light mint green */
+            color: #0f172a;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        h1, h2, h3, .title-font {
+            font-family: 'Fredoka', sans-serif;
+        }
+
+        .slide-section {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 5rem 2rem;
+            position: relative;
+            border-bottom: 4px dashed #99f6e4;
+        }
+
+        /* Nav Dots */
+        .sticky-nav {
+            position: fixed;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .nav-dot {
+            width: 14px; height: 14px; border-radius: 50%; background-color: #94a3b8; transition: all 0.3s; cursor: pointer; position: relative; border: 2px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .nav-dot:hover, .nav-dot.active { background-color: #0ea5e9; transform: scale(1.4); }
+        .nav-dot span {
+            position: absolute; right: 25px; top: 50%; transform: translateY(-50%); background: #1e293b; color: white; padding: 4px 10px; border-radius: 4px; font-size: 12px; font-weight: bold; white-space: nowrap; opacity: 0; pointer-events: none; transition: opacity 0.3s;
+        }
+        .nav-dot:hover span { opacity: 1; }
+
+        /* Custom Animations */
+        @keyframes pop {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        .animate-pop {
+            animation: pop 0.3s ease-in-out;
+        }
+
+        @keyframes slotMachine {
+            0% { transform: translateY(-20px); opacity: 0; }
+            50% { transform: translateY(0); opacity: 1; }
+            100% { transform: translateY(20px); opacity: 0; }
+        }
+
+        /* Hot Potato Bomb */
+        .bomb-container {
+            font-size: 8rem;
+            transition: all 0.1s;
+        }
+        .bomb-active {
+            animation: throb 0.5s infinite alternate, shake 0.2s infinite;
+            color: #ef4444;
+        }
+        .bomb-exploded {
+            color: #f59e0b;
+            transform: scale(1.5);
+            text-shadow: 0 0 30px #f59e0b, 0 0 60px #ef4444;
+        }
+        @keyframes throb {
+            from { transform: scale(1); }
+            to { transform: scale(1.1); }
+        }
+        @keyframes shake {
+            0% { transform: rotate(-5deg); }
+            50% { transform: rotate(5deg); }
+            100% { transform: rotate(-5deg); }
+        }
+
+        /* Bingo Grid */
+        .bingo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 10px;
+        }
+        .bingo-cell {
+            background: white;
+            border: 2px solid #cbd5e1;
+            border-radius: 8px;
+            padding: 10px;
+            text-align: center;
+            font-weight: 700;
+            color: #334155;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        /* Fun Buttons */
+        .btn-fun {
+            background: linear-gradient(to right, #0ea5e9, #3b82f6);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 9999px;
+            font-family: 'Fredoka', sans-serif;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 4px 15px rgba(14, 165, 233, 0.4);
+        }
+        .btn-fun:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(14, 165, 233, 0.6);
+        }
+        .btn-fun:active {
+            transform: translateY(1px);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Watermark Logo -->
+    <img src="June 15th- review class part 1.png" alt="Leonardo Da Vinci Logo" class="fixed top-6 left-6 md:left-10 w-32 md:w-48 opacity-15 z-0 pointer-events-none mix-blend-multiply">
+
+    <!-- Navigation -->
+    <div class="sticky-nav">
+        <a href="#intro" class="nav-dot active"><span>Welcome</span></a>
+        <a href="#vacation" class="nav-dot"><span>Vacation Share</span></a>
+        <a href="#two-truths" class="nav-dot"><span>Two Truths & A Lie</span></a>
+        <a href="#hot-potato" class="nav-dot"><span>Hot Potato</span></a>
+        <a href="#bingo-setup" class="nav-dot"><span>Bingo Setup</span></a>
+        <a href="#bingo-play" class="nav-dot"><span>Bingo Play</span></a>
+    </div>
+
+    <!-- 1. Intro -->
+    <section id="intro" class="slide-section bg-gradient-to-br from-teal-100 to-cyan-100 text-center relative z-10">
+        <div class="max-w-4xl mx-auto">
+            <div class="inline-block bg-teal-500 text-white font-bold text-lg px-8 py-2 rounded-full mb-8 shadow-md transform -rotate-2">
+                <i class="fas fa-sun mr-2"></i> WELCOME BACK!
+            </div>
+            
+            <h1 class="text-6xl md:text-8xl font-extrabold title-font text-teal-800 mb-6 drop-shadow-sm">
+                8th Grade
+            </h1>
+            <p class="text-3xl md:text-4xl text-cyan-700 font-bold mb-12 title-font">
+                Ready for a new semester?
+            </p>
+            
+            <div class="flex justify-center gap-4 mb-10">
+                <span class="bg-white px-4 py-2 rounded-lg font-bold text-slate-600 shadow-sm"><i class="fas fa-plane-departure text-blue-400 mr-2"></i> Vacation Recap</span>
+                <span class="bg-white px-4 py-2 rounded-lg font-bold text-slate-600 shadow-sm"><i class="fas fa-bomb text-red-400 mr-2"></i> Hot Potato</span>
+                <span class="bg-white px-4 py-2 rounded-lg font-bold text-slate-600 shadow-sm"><i class="fas fa-border-all text-purple-400 mr-2"></i> Verb Bingo</span>
+            </div>
+
+            <div class="mt-8 text-teal-500 animate-bounce">
+                <i class="fas fa-chevron-down text-4xl"></i>
+            </div>
+        </div>
+    </section>
+
+    <!-- 2. Vacation Share & Name Wheel -->
+    <section id="vacation" class="slide-section bg-white relative z-10">
+        <div class="max-w-6xl mx-auto w-full grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+            
+            <!-- Left: Prompts -->
+            <div>
+                <h2 class="text-4xl font-bold title-font text-slate-800 mb-6"><i class="fas fa-suitcase-rolling text-cyan-500 mr-3"></i> How was your vacation?</h2>
+                <p class="text-xl text-slate-600 mb-8">Let's share our experiences! Use these prompts to build your sentences:</p>
+                
+                <div class="space-y-4 text-xl font-bold text-slate-700">
+                    <div class="bg-cyan-50 p-4 rounded-xl border-l-4 border-cyan-500 shadow-sm flex items-center gap-3">
+                        <i class="fas fa-map-marker-alt text-cyan-400 text-2xl"></i>
+                        <p>This vacation I went to...</p>
+                    </div>
+                    <div class="bg-teal-50 p-4 rounded-xl border-l-4 border-teal-500 shadow-sm flex items-center gap-3">
+                        <i class="fas fa-running text-teal-400 text-2xl"></i>
+                        <p>I did...</p>
+                    </div>
+                    <div class="bg-orange-50 p-4 rounded-xl border-l-4 border-orange-500 shadow-sm flex items-center gap-3">
+                        <i class="fas fa-hamburger text-orange-400 text-2xl"></i>
+                        <p>I ate...</p>
+                    </div>
+                    <div class="bg-purple-50 p-4 rounded-xl border-l-4 border-purple-500 shadow-sm flex items-center gap-3">
+                        <i class="fas fa-camera text-purple-400 text-2xl"></i>
+                        <p>I took...</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right: Name Wheel -->
+            <div class="bg-slate-50 p-8 rounded-3xl border border-slate-200 shadow-xl flex flex-col items-center">
+                <h3 class="text-2xl font-bold title-font text-slate-800 mb-4"><i class="fas fa-random text-blue-500 mr-2"></i> Student Picker</h3>
+                
+                <textarea id="name-list" class="w-full bg-white border-2 border-slate-300 rounded-xl p-3 mb-4 text-sm resize-none focus:outline-none focus:border-blue-500" rows="3" placeholder="Paste student names here, separated by commas (e.g., Ana, João, Maria...)"></textarea>
+                
+                <button onclick="loadNames()" class="text-sm font-bold text-blue-600 bg-blue-100 px-4 py-1 rounded-full mb-6 hover:bg-blue-200">Load Names</button>
+
+                <div class="w-full h-32 bg-white border-4 border-slate-800 rounded-2xl flex items-center justify-center mb-6 shadow-inner relative overflow-hidden">
+                    <div id="chosen-name" class="text-4xl font-black text-slate-800 title-font z-10 transition-all duration-100">?????</div>
+                    <!-- Decorative overlay -->
+                    <div class="absolute inset-0 bg-gradient-to-b from-black/10 via-transparent to-black/10 pointer-events-none"></div>
+                </div>
+
+                <button onclick="spinWheel()" id="spin-btn" class="btn-fun w-full" disabled><i class="fas fa-sync-alt mr-2"></i> Pick a Student!</button>
+            </div>
+            
+        </div>
+    </section>
+
+    <!-- 2.5 Two Truths and a Lie -->
+    <section id="two-truths" class="slide-section bg-slate-50 relative z-10 border-b-4 border-dashed border-blue-200">
+        <div class="max-w-5xl mx-auto w-full flex flex-col md:flex-row items-center gap-10">
+            
+            <div class="flex-1">
+                <span class="bg-blue-500 text-white font-bold px-4 py-1 rounded-full text-sm uppercase tracking-widest mb-4 inline-block"><i class="fas fa-user-secret mr-2"></i> Detective Time</span>
+                <h2 class="text-5xl font-bold title-font text-slate-800 mb-6">Two Truths & A Lie</h2>
+                <p class="text-xl text-slate-600 mb-6 font-medium">Let's see if you can trick your classmates! Write down 3 sentences about your vacation.</p>
+                
+                <ul class="space-y-4 text-lg text-slate-700 bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                    <li class="flex items-start gap-3"><i class="fas fa-check text-green-500 mt-1 text-xl"></i> <div><strong>Two sentences must be TRUE.</strong><br><span class="text-sm text-slate-500">e.g., I went to the beach. I ate a whole pizza.</span></div></li>
+                    <li class="flex items-start gap-3"><i class="fas fa-times text-red-500 mt-1 text-xl"></i> <div><strong>One sentence must be a LIE.</strong><br><span class="text-sm text-slate-500">e.g., I met Taylor Swift at the mall.</span></div></li>
+                    <li class="flex items-start gap-3"><i class="fas fa-bullhorn text-blue-500 mt-1 text-xl"></i> <div><strong>Read them aloud.</strong> The class will vote on which one is the lie!</div></li>
+                </ul>
+            </div>
+
+            <div class="bg-white p-8 rounded-full w-72 h-72 flex flex-col items-center justify-center shrink-0 border-8 border-blue-100 shadow-2xl relative">
+                <p class="text-sm font-bold text-slate-400 uppercase tracking-widest mb-2 text-center">Writing Time</p>
+                <div id="writing-timer" class="text-6xl font-black title-font text-blue-600 mb-4 font-mono">03:00</div>
+                <div class="flex gap-2">
+                    <button onclick="startWritingTimer()" class="bg-green-500 hover:bg-green-400 text-white w-12 h-12 rounded-full flex items-center justify-center transition-transform hover:scale-110 shadow-md text-xl"><i class="fas fa-play"></i></button>
+                    <button onclick="pauseWritingTimer()" class="bg-yellow-500 hover:bg-yellow-400 text-white w-12 h-12 rounded-full flex items-center justify-center transition-transform hover:scale-110 shadow-md text-xl"><i class="fas fa-pause"></i></button>
+                    <button onclick="resetWritingTimer()" class="bg-red-500 hover:bg-red-400 text-white w-12 h-12 rounded-full flex items-center justify-center transition-transform hover:scale-110 shadow-md text-xl"><i class="fas fa-redo"></i></button>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- 3. Hot Potato (Revisa Vinci) -->
+    <section id="hot-potato" class="slide-section bg-slate-900 text-white relative z-10">
+        <div class="max-w-5xl mx-auto w-full text-center">
+            <span class="bg-red-500 text-white font-bold px-4 py-1 rounded-full text-sm uppercase tracking-widest mb-4 inline-block">Revisa Vinci Game</span>
+            <h2 class="text-5xl font-bold title-font text-red-400 mb-4">Digital Hot Potato</h2>
+            <p class="text-xl text-slate-300 mb-12 max-w-2xl mx-auto">Pass an object around the classroom while the timer ticks. When it explodes, the student holding the object must answer the grammar question!</p>
+
+            <div class="flex flex-col items-center justify-center">
+                <!-- The Bomb -->
+                <div id="bomb-icon" class="bomb-container mb-8">
+                    <i class="fas fa-bomb text-slate-500 drop-shadow-lg"></i>
+                </div>
+
+                <!-- Controls -->
+                <div class="flex gap-4 mb-10" id="bomb-controls">
+                    <button onclick="startHotPotato()" class="bg-red-500 hover:bg-red-400 text-white font-bold py-3 px-8 rounded-full text-xl shadow-[0_0_15px_rgba(239,68,68,0.5)] transition-all hover:scale-105">
+                        <i class="fas fa-play mr-2"></i> Start Timer
+                    </button>
+                </div>
+
+                <!-- Question Reveal Card (Hidden Initially) -->
+                <div id="question-card" class="hidden w-full max-w-2xl bg-white text-slate-800 p-8 rounded-3xl shadow-2xl transform scale-95 opacity-0 transition-all duration-500 border-b-8 border-red-500">
+                    <h3 class="text-sm font-bold text-red-500 uppercase tracking-widest mb-4">Your Question:</h3>
+                    <p id="question-text" class="text-3xl font-bold title-font mb-8 leading-tight">Question goes here?</p>
+                    <button onclick="resetHotPotato()" class="bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold py-2 px-6 rounded-lg transition-colors">
+                        Close & Reset
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 4. Bingo Setup (Past Participles) -->
+    <section id="bingo-setup" class="slide-section bg-purple-50 relative z-10">
+        <div class="max-w-6xl mx-auto w-full">
+            <div class="flex flex-col md:flex-row items-center justify-between mb-8">
+                <div>
+                    <h2 class="text-4xl font-bold title-font text-purple-700 mb-2"><i class="fas fa-table mr-3"></i> Verb Bingo: Setup</h2>
+                    <p class="text-lg text-slate-600">Draw a 3x3 grid in your notebook and choose 9 Past Participles from the board.</p>
+                </div>
+                <div class="mt-4 md:mt-0 text-center">
+                    <div class="w-24 h-24 bg-white border-4 border-purple-300 rounded-xl grid grid-cols-3 grid-rows-3 gap-1 p-1 shadow-md transform rotate-3">
+                        <div class="bg-purple-100 rounded-sm"></div><div class="bg-purple-200 rounded-sm"></div><div class="bg-purple-100 rounded-sm"></div>
+                        <div class="bg-purple-200 rounded-sm"></div><div class="bg-purple-400 rounded-sm flex items-center justify-center text-white text-xs font-bold"><i class="fas fa-star"></i></div><div class="bg-purple-200 rounded-sm"></div>
+                        <div class="bg-purple-100 rounded-sm"></div><div class="bg-purple-200 rounded-sm"></div><div class="bg-purple-100 rounded-sm"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white p-8 rounded-3xl shadow-lg border border-purple-100">
+                <h3 class="text-xl font-bold text-slate-700 mb-6 border-b border-slate-200 pb-2">Past Participles Word Bank</h3>
+                <div id="bingo-word-bank" class="bingo-grid">
+                    <!-- Populated by JS -->
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 5. Bingo Play (Caller) -->
+    <section id="bingo-play" class="slide-section bg-indigo-900 text-white relative z-10 border-none">
+        <div class="max-w-5xl mx-auto w-full text-center">
+            <h2 class="text-5xl font-bold title-font text-indigo-300 mb-4">Bingo Caller</h2>
+            <p class="text-lg text-indigo-200 mb-10">Teacher: Call out the Base Form. Students: Mark the Past Participle!</p>
+
+            <div class="bg-indigo-950/80 p-10 rounded-[3rem] border border-indigo-700 shadow-2xl relative overflow-hidden">
+                <!-- Background decoration -->
+                <i class="fas fa-bullhorn absolute -left-10 -bottom-10 text-9xl text-indigo-800 opacity-30"></i>
+
+                <div class="relative z-10">
+                    <p class="text-sm font-bold text-indigo-400 uppercase tracking-widest mb-4">Current Verb (Base Form)</p>
+                    <div id="current-verb" class="text-7xl md:text-8xl font-black title-font text-white mb-10 h-32 flex items-center justify-center drop-shadow-lg">
+                        Ready?
+                    </div>
+
+                    <button onclick="callNextVerb()" id="call-verb-btn" class="bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-400 hover:to-purple-400 text-white font-bold py-4 px-10 rounded-full text-2xl shadow-[0_0_20px_rgba(236,72,153,0.5)] transition-transform hover:scale-105 mb-10">
+                        Draw Next Verb
+                    </button>
+
+                    <div class="border-t border-indigo-800 pt-6 text-left">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="text-indigo-300 font-bold"><i class="fas fa-history mr-2"></i> History (Base &rarr; P.P.)</h3>
+                            <span id="verb-count" class="text-xs bg-indigo-800 px-3 py-1 rounded-full text-indigo-200">0/24 Called</span>
+                        </div>
+                        <div id="called-verbs-list" class="flex flex-wrap gap-2 max-h-40 overflow-y-auto pr-2 custom-scrollbar">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mt-8">
+                <button onclick="resetBingo()" class="text-indigo-400 hover:text-white underline text-sm"><i class="fas fa-redo mr-1"></i> Reset Game</button>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // --- 1. Global Setup & Smooth Scroll ---
+        document.querySelectorAll('.nav-dot').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({ behavior: 'smooth' });
+            });
+        });
+
+        window.addEventListener('scroll', () => {
+            let current = '';
+            const sections = document.querySelectorAll('.slide-section');
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                if (scrollY >= sectionTop - 300) { current = section.getAttribute('id'); }
+            });
+            document.querySelectorAll('.nav-dot').forEach(dot => {
+                dot.classList.remove('active');
+                if (dot.getAttribute('href').substring(1) === current) { dot.classList.add('active'); }
+            });
+        });
+
+        // Audio initialization (Tone.js)
+        let audioInit = false;
+        let tickSynth, noiseSynth;
+
+        function initAudio() {
+            if (audioInit) return;
+            Tone.start();
+            
+            // High pitched short tick for the bomb
+            tickSynth = new Tone.Synth({
+                oscillator: { type: "square" },
+                envelope: { attack: 0.01, decay: 0.05, sustain: 0, release: 0 }
+            }).toDestination();
+            tickSynth.volume.value = -10;
+
+            // Noise synth for explosion
+            noiseSynth = new Tone.NoiseSynth({
+                noise: { type: "brown" },
+                envelope: { attack: 0.01, decay: 0.8, sustain: 0, release: 0.5 }
+            }).toDestination();
+            noiseSynth.volume.value = -5;
+
+            audioInit = true;
+        }
+
+        // --- 2. Name Wheel Logic ---
+        let studentsArray = [];
+        
+        function loadNames() {
+            const input = document.getElementById('name-list').value;
+            if(!input.trim()) return alert("Please paste some names first!");
+            
+            studentsArray = input.split(',').map(name => name.trim()).filter(name => name.length > 0);
+            
+            if(studentsArray.length > 0) {
+                document.getElementById('spin-btn').disabled = false;
+                document.getElementById('chosen-name').innerText = "Ready!";
+                document.getElementById('chosen-name').classList.add('text-green-600');
+                setTimeout(() => document.getElementById('chosen-name').classList.remove('text-green-600'), 1000);
+            }
+        }
+
+        function spinWheel() {
+            if(studentsArray.length === 0) return;
+            initAudio(); // ensure audio context is ready
+            
+            const display = document.getElementById('chosen-name');
+            const btn = document.getElementById('spin-btn');
+            btn.disabled = true;
+            
+            let spins = 0;
+            const maxSpins = 20;
+            const spinInterval = setInterval(() => {
+                const randomName = studentsArray[Math.floor(Math.random() * studentsArray.length)];
+                display.innerText = randomName;
+                
+                // Play soft tick
+                if(audioInit) tickSynth.triggerAttackRelease("C6", "32n");
+
+                spins++;
+                if(spins >= maxSpins) {
+                    clearInterval(spinInterval);
+                    btn.disabled = false;
+                    display.classList.add('text-blue-600', 'animate-pop');
+                    setTimeout(() => display.classList.remove('text-blue-600', 'animate-pop'), 500);
+                    
+                    if(audioInit) {
+                        const winSynth = new Tone.Synth().toDestination();
+                        winSynth.volume.value = -10;
+                        winSynth.triggerAttackRelease("C5", "8n");
+                        setTimeout(() => winSynth.triggerAttackRelease("E5", "4n"), 150);
+                    }
+                }
+            }, 100);
+        }
+
+        // --- 3. Hot Potato Logic ---
+        const reviewQuestions = [
+            "Complete: I have never _____ (eat) sushi.",
+            "Make a sentence: (you / ever / travel / abroad) ?",
+            "Complete: Yesterday, we _____ (go) to the park.",
+            "Make a sentence: (she / not / finish / her homework / yet).",
+            "Complete: Look at those clouds! It _____ (rain).",
+            "Answer: What will you be doing this time tomorrow?",
+            "Complete: He _____ (play) video games for 3 hours! (Present Perfect Continuous)",
+            "Make a sentence using the linker 'Although'.",
+            "Vocabulary: Name 3 types of TV shows.",
+            "Comparatives: Emphasize 'A Ferrari is (fast) a Fiat Uno.'",
+            "Complete: I promise I _____ (help) you later.",
+            "Linkers: Fill the blank -> '_______ of the cold, we went swimming.'",
+            "Correct the mistake: 'I have went to the mall yesterday.'",
+            "Make a sentence using 'As soon as'.",
+            "What is the past participle of 'WRITE' and 'RIDE'?",
+            "Vocabulary: Name 2 Compound Adjectives (e.g., well-known).",
+            "Complete: While I was studying, my phone _____ (ring).",
+            "Make a sentence using 'In spite of'.",
+            "Translate to English: 'Eu vou viajar no mês que vem.' (Use Going to)",
+            "Complete: We _____ (know) each other since we were kids."
+        ];
+
+        let bombTimer;
+        let bombTickInterval;
+
+        function startHotPotato() {
+            initAudio();
+            document.getElementById('bomb-controls').classList.add('hidden');
+            document.getElementById('question-card').classList.add('hidden');
+            document.getElementById('question-card').classList.remove('scale-100', 'opacity-100');
+            
+            const icon = document.getElementById('bomb-icon');
+            icon.className = 'bomb-container bomb-active';
+            icon.innerHTML = '<i class="fas fa-bomb drop-shadow-lg"></i>';
+
+            // Random time between 10s and 25s
+            const duration = Math.floor(Math.random() * 15000) + 10000; 
+            
+            // Start audio ticking
+            if(audioInit) {
+                let tickTime = 1000;
+                let lastTick = Tone.now();
+                
+                // create a simple loop function for ticking that speeds up
+                function playTick() {
+                    tickSynth.triggerAttackRelease("G5", "32n");
+                }
+                
+                // Speed up logic could go here, but simple interval is safer for browser sync
+                bombTickInterval = setInterval(playTick, 800);
+            }
+
+            // Set explosion timeout
+            bombTimer = setTimeout(explodeBomb, duration);
+        }
+
+        function explodeBomb() {
+            clearInterval(bombTickInterval);
+            
+            if(audioInit) {
+                noiseSynth.triggerAttackRelease("8n");
+            }
+
+            const icon = document.getElementById('bomb-icon');
+            icon.className = 'bomb-container bomb-exploded';
+            icon.innerHTML = '<i class="fas fa-bomb"></i>'; // keep bomb but change style
+
+            // Pick random question
+            const q = reviewQuestions[Math.floor(Math.random() * reviewQuestions.length)];
+            document.getElementById('question-text').innerText = q;
+
+            // Show card
+            setTimeout(() => {
+                const card = document.getElementById('question-card');
+                card.classList.remove('hidden');
+                // Allow reflow
+                setTimeout(() => {
+                    card.classList.add('scale-100', 'opacity-100');
+                }, 50);
+            }, 1000);
+        }
+
+        function resetHotPotato() {
+            document.getElementById('question-card').classList.add('hidden');
+            document.getElementById('question-card').classList.remove('scale-100', 'opacity-100');
+            document.getElementById('bomb-controls').classList.remove('hidden');
+            
+            const icon = document.getElementById('bomb-icon');
+            icon.className = 'bomb-container mb-8';
+            icon.innerHTML = '<i class="fas fa-bomb text-slate-500 drop-shadow-lg"></i>';
+        }
+
+        // --- 3.5 Writing Timer Logic (Two Truths) ---
+        let writingInterval;
+        let writingTime = 180; // 3 minutes
+
+        function updateWritingTimerDisplay() {
+            const m = Math.floor(writingTime / 60).toString().padStart(2, '0');
+            const s = (writingTime % 60).toString().padStart(2, '0');
+            const display = document.getElementById('writing-timer');
+            display.innerText = `${m}:${s}`;
+            
+            if (writingTime <= 10 && writingTime > 0) {
+                display.classList.add('text-red-500');
+                display.classList.remove('text-blue-600');
+            } else if (writingTime === 0) {
+                display.classList.add('animate-ping', 'text-red-600');
+                display.classList.remove('text-red-500');
+            } else {
+                display.classList.remove('text-red-500', 'animate-ping', 'text-red-600');
+                display.classList.add('text-blue-600');
+            }
+        }
+
+        function startWritingTimer() {
+            clearInterval(writingInterval);
+            if (writingTime === 0) writingTime = 180;
+            writingInterval = setInterval(() => {
+                if (writingTime > 0) {
+                    writingTime--;
+                    updateWritingTimerDisplay();
+                } else {
+                    clearInterval(writingInterval);
+                    initAudio();
+                    if(audioInit) noiseSynth.triggerAttackRelease("4n"); // Simple buzzer sound
+                }
+            }, 1000);
+        }
+
+        function pauseWritingTimer() {
+            clearInterval(writingInterval);
+        }
+
+        function resetWritingTimer() {
+            clearInterval(writingInterval);
+            writingTime = 180;
+            updateWritingTimerDisplay();
+        }
+
+        // --- 4. Bingo Logic ---
+        const initialVerbs = [
+            {base: 'be', pp: 'been'}, {base: 'break', pp: 'broken'}, {base: 'buy', pp: 'bought'},
+            {base: 'catch', pp: 'caught'}, {base: 'choose', pp: 'chosen'}, {base: 'do', pp: 'done'},
+            {base: 'drink', pp: 'drunk'}, {base: 'eat', pp: 'eaten'}, {base: 'fall', pp: 'fallen'},
+            {base: 'fly', pp: 'flown'}, {base: 'forget', pp: 'forgotten'}, {base: 'get', pp: 'got (gotten)'},
+            {base: 'give', pp: 'given'}, {base: 'go', pp: 'gone'}, {base: 'hide', pp: 'hidden'},
+            {base: 'know', pp: 'known'}, {base: 'make', pp: 'made'}, {base: 'see', pp: 'seen'},
+            {base: 'speak', pp: 'spoken'}, {base: 'steal', pp: 'stolen'}, {base: 'swim', pp: 'swum'},
+            {base: 'take', pp: 'taken'}, {base: 'think', pp: 'thought'}, {base: 'write', pp: 'written'}
+        ];
+
+        let availableVerbs = [];
+        let calledVerbs = [];
+
+        function initBingo() {
+            availableVerbs = [...initialVerbs];
+            calledVerbs = [];
+            
+            // Sort PP alphabetically for the word bank display
+            const sortedPP = [...initialVerbs].map(v => v.pp).sort();
+            
+            const bank = document.getElementById('bingo-word-bank');
+            bank.innerHTML = '';
+            sortedPP.forEach(pp => {
+                const div = document.createElement('div');
+                div.className = 'bingo-cell';
+                div.innerText = pp;
+                bank.appendChild(div);
+            });
+
+            updateCallerUI();
+        }
+
+        function callNextVerb() {
+            if(availableVerbs.length === 0) {
+                document.getElementById('current-verb').innerText = "Game Over!";
+                document.getElementById('call-verb-btn').disabled = true;
+                return;
+            }
+            initAudio();
+            if(audioInit) {
+                tickSynth.triggerAttackRelease("C6", "16n");
+            }
+
+            // Pick random
+            const idx = Math.floor(Math.random() * availableVerbs.length);
+            const verb = availableVerbs[idx];
+            
+            // Remove from available, add to called
+            availableVerbs.splice(idx, 1);
+            calledVerbs.unshift(verb); // add to beginning so newest is on top
+
+            updateCallerUI();
+        }
+
+        function updateCallerUI() {
+            const display = document.getElementById('current-verb');
+            const list = document.getElementById('called-verbs-list');
+            const count = document.getElementById('verb-count');
+
+            if(calledVerbs.length > 0) {
+                // Animate display
+                display.classList.add('scale-110', 'text-pink-400');
+                display.innerText = calledVerbs[0].base.toUpperCase();
+                setTimeout(() => display.classList.remove('scale-110', 'text-pink-400'), 300);
+
+                // Update list
+                list.innerHTML = '';
+                calledVerbs.forEach((v, i) => {
+                    const span = document.createElement('span');
+                    // Style the newest one differently
+                    if(i === 0) {
+                        span.className = 'bg-pink-500 text-white font-bold px-3 py-1 rounded text-sm shadow-sm';
+                    } else {
+                        span.className = 'bg-indigo-800 text-indigo-200 px-3 py-1 rounded text-sm';
+                    }
+                    span.innerHTML = `<strong>${v.base}</strong> &rarr; ${v.pp}`;
+                    list.appendChild(span);
+                });
+            } else {
+                display.innerText = "Ready?";
+                list.innerHTML = '';
+            }
+
+            count.innerText = `${calledVerbs.length}/${initialVerbs.length} Called`;
+        }
+
+        function resetBingo() {
+            if(confirm("Are you sure you want to reset the Bingo game?")) {
+                document.getElementById('call-verb-btn').disabled = false;
+                initBingo();
+            }
+        }
+
+        // Run on load
+        window.onload = () => {
+            initBingo();
+        };
+
+    </script>
+</body>
+</html>
