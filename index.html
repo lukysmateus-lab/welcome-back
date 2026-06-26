@@ -278,13 +278,30 @@
                     </button>
                 </div>
 
-                <!-- Question Reveal Card (Hidden Initially) -->
-                <div id="question-card" class="hidden w-full max-w-2xl bg-white text-slate-800 p-8 rounded-3xl shadow-2xl transform scale-95 opacity-0 transition-all duration-500 border-b-8 border-red-500">
-                    <h3 class="text-sm font-bold text-red-500 uppercase tracking-widest mb-4">Your Question:</h3>
-                    <p id="question-text" class="text-3xl font-bold title-font mb-8 leading-tight">Question goes here?</p>
-                    <button onclick="resetHotPotato()" class="bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold py-2 px-6 rounded-lg transition-colors">
-                        Close & Reset
+                <!-- Question Reveal Card -->
+                <div id="question-card" class="hidden w-full max-w-3xl bg-white text-slate-800 p-8 rounded-3xl shadow-2xl transform scale-95 opacity-0 transition-all duration-500 border-b-8 border-red-500">
+                    
+                    <h3 class="text-sm font-bold text-red-500 uppercase tracking-widest mb-4 border-b-2 border-slate-100 pb-2 text-left">
+                        <i class="fas fa-question-circle mr-1"></i> Grammar Question:
+                    </h3>
+                    <p id="question-text" class="text-3xl font-bold title-font mb-8 leading-relaxed">Question goes here?</p>
+                    
+                    <!-- NEW: Button to reveal answer -->
+                    <button id="reveal-ans-btn" onclick="revealHotPotatoAnswer()" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-8 rounded-xl shadow-lg transition-transform hover:-translate-y-1 mb-6 w-full text-xl uppercase tracking-wider title-font">
+                        <i class="fas fa-eye mr-2"></i> Reveal Answer
                     </button>
+
+                    <!-- NEW: Hidden answer box -->
+                    <div id="answer-box" class="hidden bg-green-50 border-l-8 border-green-500 p-6 rounded-r-xl mb-8 text-left shadow-inner">
+                        <p class="text-sm font-bold text-green-600 uppercase tracking-widest mb-2"><i class="fas fa-check-circle mr-1"></i> Correct Answer:</p>
+                        <p id="answer-text" class="text-2xl font-black text-slate-700 title-font tracking-wide">Answer goes here.</p>
+                    </div>
+
+                    <div class="border-t-2 border-slate-100 pt-6">
+                        <button onclick="resetHotPotato()" class="bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold py-2 px-8 rounded-full transition-colors uppercase text-sm">
+                            <i class="fas fa-redo-alt mr-2"></i> Close & Reset Game
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -354,7 +371,7 @@
         </div>
     </section>
 
-    <!-- ÁREA JAVASCRIPT BLINDADA -->
+    <!-- JAVASCRIPT BLINDADO & ATUALIZADO -->
     <script>
         // --- 1. Global Setup & Smooth Scroll ---
         document.querySelectorAll('.nav-dot').forEach(anchor => {
@@ -383,12 +400,9 @@
 
         function initAudio() {
             if (audioInit) return;
-            
             try {
-                // Checa se a biblioteca Tone foi injetada corretamente no Head da página
                 if(typeof Tone !== 'undefined') {
                     Tone.start();
-                    
                     tickSynth = new Tone.Synth({
                         oscillator: { type: "square" },
                         envelope: { attack: 0.01, decay: 0.05, sustain: 0, release: 0 }
@@ -404,13 +418,13 @@
                     audioInit = true;
                 }
             } catch(e) {
-                console.warn("Audio Context bloqueado pelas regras de privacidade do navegador ou não carregado. Operando silenciosamente.", e);
+                console.warn("Audio Context blocked. Running silently.");
             }
         }
 
 
         // ============================================
-        // 2. NAME WHEEL LOGIC (Correção Principal)
+        // 2. NAME WHEEL LOGIC
         // ============================================
         let studentsArray = [];
         
@@ -418,24 +432,18 @@
             const inputElement = document.getElementById('name-list');
             const input = inputElement.value;
             
-            if(!input.trim()) {
-                alert("Please paste some names first!");
-                return;
-            }
+            if(!input.trim()) { alert("Please paste some names first!"); return; }
             
-            // Aceita nomes separados por VÍRGULA, ou QUEBRA DE LINHA (Enter). (Regex corrigido)
             studentsArray = input.split(/[\n,;]+/).map(name => name.trim()).filter(name => name.length > 0);
             
             if(studentsArray.length > 0) {
                 document.getElementById('spin-btn').disabled = false;
-                
                 const chosenDisplay = document.getElementById('chosen-name');
                 chosenDisplay.innerText = "Ready!";
                 chosenDisplay.classList.add('text-green-600');
                 
                 setTimeout(() => chosenDisplay.classList.remove('text-green-600'), 1000);
                 
-                // UX Feedback (Mostra no input vazio quantos entraram)
                 inputElement.value = '';
                 inputElement.placeholder = `${studentsArray.length} names loaded! You can add more or click "Pick a Student!".`;
             } else {
@@ -445,8 +453,6 @@
 
         function spinWheel() {
             if(studentsArray.length === 0) return;
-            
-            // Chama a inicialização num Try/Catch para impedir falhas graves do script
             try { initAudio(); } catch(e){}
             
             const display = document.getElementById('chosen-name');
@@ -457,19 +463,14 @@
             const maxSpins = 20;
             
             const spinInterval = setInterval(() => {
-                // INCREMENTO TEM QUE SER AQUI NO TOPO DO LAÇO!
-                // Protege caso algo no meio do caminho dispare um Error silencioso.
                 spins++; 
-                
                 const randomName = studentsArray[Math.floor(Math.random() * studentsArray.length)];
                 display.innerText = randomName;
                 
-                // Play audio de forma completamente isolada do fluxo
                 if(audioInit && typeof tickSynth !== 'undefined') {
                     try { tickSynth.triggerAttackRelease("C6", "32n"); } catch(e){}
                 }
 
-                // Check final
                 if(spins >= maxSpins) {
                     clearInterval(spinInterval);
                     btn.disabled = false;
@@ -477,7 +478,6 @@
                     display.classList.add('text-blue-600', 'animate-pop');
                     setTimeout(() => display.classList.remove('text-blue-600', 'animate-pop'), 500);
                     
-                    // Som de vitoria isolado
                     if(audioInit) {
                         try {
                             const winSynth = new Tone.Synth().toDestination();
@@ -492,29 +492,43 @@
 
 
         // ============================================
-        // 3. HOT POTATO LOGIC (Revisa Vinci)
+        // 3. HOT POTATO LOGIC (ATUALIZADA COM REVEAL ANSWER)
         // ============================================
         const reviewQuestions = [
-            "Complete: I have never _____ (eat) sushi.",
-            "Make a sentence: (you / ever / travel / abroad) ?",
-            "Complete: Yesterday, we _____ (go) to the park.",
-            "Make a sentence: (she / not / finish / her homework / yet).",
-            "Complete: Look at those clouds! It _____ (rain).",
-            "Answer: What will you be doing this time tomorrow?",
-            "Complete: He _____ (play) video games for 3 hours! (Present Perfect Continuous)",
-            "Make a sentence using the linker 'Although'.",
-            "Vocabulary: Name 3 types of TV shows.",
-            "Comparatives: Emphasize 'A Ferrari is (fast) a Fiat Uno.'",
-            "Complete: I promise I _____ (help) you later.",
-            "Linkers: Fill the blank -> '_______ of the cold, we went swimming.'",
-            "Correct the mistake: 'I have went to the mall yesterday.'",
-            "Make a sentence using 'As soon as'.",
-            "What is the past participle of 'WRITE' and 'RIDE'?",
-            "Vocabulary: Name 2 Compound Adjectives (e.g., well-known).",
-            "Complete: While I was studying, my phone _____ (ring).",
-            "Make a sentence using 'In spite of'.",
-            "Translate to English: 'Eu vou viajar no mês que vem.' (Use Going to)",
-            "Complete: We _____ (know) each other since we were kids."
+            // Past Simple vs Past Continuous
+            { q: "Complete: I _____ (watch) TV when my cousin _____ (call) me.", a: "was watching / called" },
+            { q: "Complete: They _____ (listen) to music when the teacher _____ (come) in.", a: "were listening / came" },
+            { q: "Complete: Sarah _____ (do) her homework when the internet _____ (stop).", a: "was doing / stopped" },
+            { q: "Complete: We _____ (walk) home when it _____ (start) to rain.", a: "were walking / started" },
+            { q: "Complete: My brother _____ (ride) his bike when he _____ (see) a dog.", a: "was riding / saw" },
+            
+            // Connectors
+            { q: "Fill the blank: _____ it was raining, they went to the park.", a: "Although / Though" },
+            { q: "Fill the blank: She was tired. _____, she finished her homework.", a: "However" },
+            { q: "Fill the blank: I studied a lot. I didn't pass the test, _____.", a: "though" },
+            { q: "Fill the blank: In spite _____ the heavy storm, they went out.", a: "of" },
+            { q: "Fill the blank: She was tired, _____ she finished her homework.", a: "but" },
+
+            // Present Perfect vs Simple Past
+            { q: "Complete: _____ you ever _____ (try) Mexican food?", a: "Have / tried" },
+            { q: "Complete: My parents _____ (visit) Rio de Janeiro last summer.", a: "visited" },
+            { q: "Complete: Lucas __________ (not finish) his project yet.", a: "has not finished / hasn't finished" },
+            { q: "Complete: They _____ (travel) to the US twice in their lives.", a: "have traveled" },
+            { q: "Complete: I _____ (watch) a great movie yesterday.", a: "watched" },
+
+            // Reporting Verbs
+            { q: "Reported Speech: 'Keep practicing every day!' -> The coach _____ the players to keep practicing.", a: "encouraged" },
+            { q: "Reported Speech: 'Please open your books.' -> The teacher _____ the students to open their books.", a: "asked / told" },
+            { q: "Reported Speech: 'Would you like to come to my party?' -> Emma _____ her friends to her party.", a: "invited" },
+            { q: "Reported Speech: 'Eat more vegetables.' -> The doctor _____ the patient to eat more vegetables.", a: "advised" },
+            { q: "Reported Speech: 'Can you help me?' -> Mark _____ his friend to help him.", a: "asked" },
+
+            // Emphasizing Comparatives
+            { q: "Emphasize comparative: A cheetah (120km) is _____ faster than a lion (80km).", a: "far / much" },
+            { q: "Emphasize comparative: Today is 26ºC and yesterday was 25ºC. Today is _____ warmer.", a: "a bit / slightly" },
+            { q: "Emphasize comparative: Watermelon weighs 8kg, apple weighs 200g. The watermelon is _____ bigger.", a: "much / far" },
+            { q: "Emphasize comparative: Maria scored 91 and Lucas 90. Maria's score is _____ higher.", a: "a bit / slightly" },
+            { q: "Emphasize: My bag is 5kg. Yours is 5kg. My bag is _____ as heavy as yours.", a: "just" }
         ];
 
         let bombTimer;
@@ -531,7 +545,7 @@
             icon.className = 'bomb-container bomb-active';
             icon.innerHTML = '<i class="fas fa-bomb drop-shadow-lg"></i>';
 
-            // Tempo entre 10s e 25s
+            // Tempo random entre 10s e 25s
             const duration = Math.floor(Math.random() * 15000) + 10000; 
             
             if(audioInit && typeof tickSynth !== 'undefined') {
@@ -554,9 +568,15 @@
             icon.className = 'bomb-container bomb-exploded';
             icon.innerHTML = '<i class="fas fa-bomb"></i>';
 
-            // Sorteia pergunta da base de dados do final do semestre!
-            const q = reviewQuestions[Math.floor(Math.random() * reviewQuestions.length)];
-            document.getElementById('question-text').innerText = q;
+            // Puxa PERGUNTA E RESPOSTA em formato de Objeto
+            const qObj = reviewQuestions[Math.floor(Math.random() * reviewQuestions.length)];
+            document.getElementById('question-text').innerText = qObj.q;
+            document.getElementById('answer-text').innerText = qObj.a;
+
+            // Reset do estado dos botões para proxima rodada
+            document.getElementById('reveal-ans-btn').classList.remove('hidden');
+            document.getElementById('answer-box').classList.add('hidden');
+            document.getElementById('answer-box').classList.remove('animate-pop');
 
             setTimeout(() => {
                 const card = document.getElementById('question-card');
@@ -565,6 +585,15 @@
                     card.classList.add('scale-100', 'opacity-100');
                 }, 50);
             }, 1000);
+        }
+
+        // Nova funçao Revelar Resposta
+        function revealHotPotatoAnswer() {
+            document.getElementById('reveal-ans-btn').classList.add('hidden');
+            
+            const ansBox = document.getElementById('answer-box');
+            ansBox.classList.remove('hidden');
+            ansBox.classList.add('animate-pop'); // Add animacao para pular
         }
 
         function resetHotPotato() {
