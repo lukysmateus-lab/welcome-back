@@ -3,19 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Healthy Education Part 3 - Investigadores Da Vinci</title>
+    <title>Welcome Back! - Leonardo Da Vinci</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts -->
+    <!-- Tone.js for Audio -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
+    
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Nunito:wght@400;700;800;900&display=swap');
-        
+        @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Nunito:wght@400;600;800&display=swap');
+
         body {
             font-family: 'Nunito', sans-serif;
-            background-color: #f8fafc;
-            color: #334155;
+            background-color: #f0fdfa; /* Light mint green */
+            color: #0f172a;
             overflow-x: hidden;
             scroll-behavior: smooth;
         }
@@ -29,487 +31,327 @@
             display: flex;
             flex-direction: column;
             justify-content: center;
-            padding: 4rem 2rem;
+            padding: 5rem 2rem;
             position: relative;
-            border-bottom: 3px dashed #cbd5e1;
+            border-bottom: 4px dashed #99f6e4;
         }
 
+        /* Nav Dots */
         .sticky-nav {
-            position: fixed; right: 20px; top: 50%; transform: translateY(-50%); z-index: 100; display: flex; flex-direction: column; gap: 15px;
+            position: fixed;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
         }
         .nav-dot {
-            width: 16px; height: 16px; border-radius: 50%; background-color: #cbd5e1; transition: all 0.3s; cursor: pointer; position: relative; border: 2px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            width: 14px; height: 14px; border-radius: 50%; background-color: #94a3b8; transition: all 0.3s; cursor: pointer; position: relative; border: 2px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
-        .nav-dot:hover, .nav-dot.active { background-color: #e11d48; transform: scale(1.3); }
+        .nav-dot:hover, .nav-dot.active { background-color: #0ea5e9; transform: scale(1.4); }
         .nav-dot span {
-            position: absolute; right: 25px; top: 50%; transform: translateY(-50%); background: #1e293b; color: white; padding: 4px 10px; border-radius: 4px; font-size: 12px; white-space: nowrap; opacity: 0; pointer-events: none; transition: opacity 0.3s; font-family: 'Nunito', sans-serif; font-weight: bold;
+            position: absolute; right: 25px; top: 50%; transform: translateY(-50%); background: #1e293b; color: white; padding: 4px 10px; border-radius: 4px; font-size: 12px; font-weight: bold; white-space: nowrap; opacity: 0; pointer-events: none; transition: opacity 0.3s;
         }
         .nav-dot:hover span { opacity: 1; }
-        
-        .css-logo {
-            position: relative; display: inline-flex; align-items: center; justify-content: center; font-family: 'Fredoka', sans-serif; text-transform: uppercase;
+
+        /* Custom Animations */
+        @keyframes pop {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
         }
-        .css-logo-text { display: flex; flex-direction: column; line-height: 0.85; font-weight: 800; z-index: 10; }
-        .text-inves, .text-tiga, .text-dor { color: #e11d48; font-size: 6rem; letter-spacing: -2px; text-shadow: 2px 2px 0px rgba(0,0,0,0.05); }
-        .text-es { color: #e11d48; font-size: 6rem; letter-spacing: -2px; z-index: 30; text-shadow: 2px 2px 0px rgba(0,0,0,0.05);}
-        .text-davinci { color: #1d4ed8; font-size: 3rem; margin-top: 5px; font-weight: 900; }
-        .css-magnifier {
-            position: absolute; right: -70px; bottom: -20px; width: 160px; height: 160px; border: 16px solid #f59e0b; border-radius: 50%; z-index: 20; background: rgba(255,255,255,0.2); box-shadow: inset 0 0 20px rgba(245,158,11,0.2), 0 10px 15px rgba(0,0,0,0.1); backdrop-filter: blur(2px);
-        }
-        .css-magnifier::after {
-            content: ''; position: absolute; top: -110px; right: -60px; width: 35px; height: 120px; background-color: #f59e0b; transform: rotate(35deg); border-radius: 8px; border: 4px solid #d97706; box-shadow: 5px 5px 10px rgba(0,0,0,0.1);
+        .animate-pop {
+            animation: pop 0.3s ease-in-out;
         }
 
-        .jeopardy-grid {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr); /* 20 cards = 5 columns x 4 rows */
-            gap: 15px;
-            width: 100%;
-            max-width: 1000px;
-            margin: 0 auto;
+        @keyframes slotMachine {
+            0% { transform: translateY(-20px); opacity: 0; }
+            50% { transform: translateY(0); opacity: 1; }
+            100% { transform: translateY(20px); opacity: 0; }
         }
-        .jeopardy-btn {
-            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-            color: white;
-            font-family: 'Fredoka', sans-serif;
-            font-size: 2.5rem;
-            font-weight: 800;
-            padding: 1.5rem 1rem;
-            border-radius: 12px;
-            box-shadow: 0 8px 0 #1d4ed8, 0 15px 20px rgba(0,0,0,0.2);
+
+        /* Hot Potato Bomb */
+        .bomb-container {
+            font-size: 8rem;
             transition: all 0.1s;
-            cursor: pointer;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
         }
-        .jeopardy-btn:active {
-            transform: translateY(8px);
-            box-shadow: 0 0 0 #1d4ed8, 0 5px 10px rgba(0,0,0,0.2);
+        .bomb-active {
+            animation: throb 0.5s infinite alternate, shake 0.2s infinite;
+            color: #ef4444;
         }
-        .jeopardy-btn.disabled {
-            background: #94a3b8;
-            box-shadow: 0 4px 0 #64748b;
-            color: #cbd5e1;
-            cursor: not-allowed;
-            transform: translateY(4px);
-            text-shadow: none;
+        .bomb-exploded {
+            color: #f59e0b;
+            transform: scale(1.5);
+            text-shadow: 0 0 30px #f59e0b, 0 0 60px #ef4444;
         }
-
-        .mem-grid {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr); /* 20 cards */
-            gap: 12px;
-            width: 100%;
-            max-width: 900px;
-            margin: 0 auto;
+        @keyframes throb {
+            from { transform: scale(1); }
+            to { transform: scale(1.1); }
         }
-        .mem-card {
-            background-color: transparent; width: 100%; aspect-ratio: 1/1; perspective: 1000px; cursor: pointer;
-        }
-        .mem-card-inner {
-            position: relative; width: 100%; height: 100%; text-align: center; transition: transform 0.6s; transform-style: preserve-3d;
-        }
-        .mem-card.flipped .mem-card-inner { transform: rotateY(180deg); }
-        .mem-card.matched .mem-card-inner { transform: rotateY(180deg); cursor: default; }
-        .mem-card.matched .mem-back { border-color: #22c55e; background-color: #f0fdf4; box-shadow: 0 0 15px rgba(34,197,94,0.4); color: #166534; }
-        .team-active { outline: 4px solid #f59e0b; transform: scale(1.05); }
-        
-        .mem-front, .mem-back {
-            position: absolute; width: 100%; height: 100%; backface-visibility: hidden; display: flex; align-items: center; justify-content: center; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); font-weight: 800; padding: 5px;
-        }
-        .mem-front { background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; font-size: 2.5rem; }
-        .mem-back { background-color: white; color: #1e293b; transform: rotateY(180deg); border: 3px solid #10b981; font-size: 1.1rem; line-height: 1.2; word-break: break-word; }
-
-
-        .modal {
-            display: none; position: fixed; inset: 0; z-index: 1000; background: rgba(15, 23, 42, 0.9); backdrop-filter: blur(5px);
-            align-items: center; justify-content: center; padding: 20px;
-        }
-        .modal.active { display: flex; animation: fadeIn 0.3s; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        
-        .modal-content {
-            background: white; border-radius: 24px; padding: 40px; max-width: 700px; width: 100%; text-align: center; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); transform: scale(0.9); animation: popIn 0.3s forwards;
-        }
-        @keyframes popIn { to { transform: scale(1); } }
-
-        .match-btn {
-            background-color: white; border: 3px solid #cbd5e1; border-radius: 12px; padding: 12px 20px; font-weight: 700; font-size: 1.2rem; cursor: pointer; transition: all 0.2s; color: #475569; width: 100%; text-align: center;
-        }
-        .match-btn:hover:not(.matched):not(.selected) { border-color: #3b82f6; background-color: #eff6ff; color: #2563eb; }
-        .match-btn.selected { background-color: #3b82f6; border-color: #1d4ed8; color: white; transform: scale(1.05); box-shadow: 0 10px 15px -3px rgba(59, 130, 246, 0.3); }
-        .match-btn.matched { background-color: #dcfce7; border-color: #22c55e; color: #166534; opacity: 0.7; cursor: default; }
-        .match-btn.error { background-color: #fee2e2; border-color: #ef4444; color: #991b1b; animation: shake 0.4s; }
-
         @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-5px); }
-            50% { transform: translateX(5px); }
-            75% { transform: translateX(-5px); }
+            0% { transform: rotate(-5deg); }
+            50% { transform: rotate(5deg); }
+            100% { transform: rotate(-5deg); }
         }
 
-        .trivia-option {
-            background: #f8fafc; border: 2px solid #e2e8f0; border-radius: 16px; padding: 20px; font-size: 1.5rem; font-weight: 700; color: #334155; cursor: pointer; transition: all 0.2s;
+        /* Bingo Grid */
+        .bingo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 10px;
         }
-        .trivia-option:hover { background: #e0f2fe; border-color: #60a5fa; transform: translateY(-5px); box-shadow: 0 10px 15px rgba(0,0,0,0.05); }
-        .trivia-option.correct { background: #22c55e; border-color: #16a34a; color: white; pointer-events: none; }
-        .trivia-option.wrong { background: #ef4444; border-color: #dc2626; color: white; animation: shake 0.4s; pointer-events: none; }
+        .bingo-cell {
+            background: white;
+            border: 2px solid #cbd5e1;
+            border-radius: 8px;
+            padding: 10px;
+            text-align: center;
+            font-weight: 700;
+            color: #334155;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
 
-        .hidden-reveal {
-            max-height: 0; overflow: hidden; opacity: 0; transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        /* Fun Buttons */
+        .btn-fun {
+            background: linear-gradient(to right, #0ea5e9, #3b82f6);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 9999px;
+            font-family: 'Fredoka', sans-serif;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 4px 15px rgba(14, 165, 233, 0.4);
         }
-        .hidden-reveal.active {
-            max-height: 600px; opacity: 1; margin-top: 2rem;
+        .btn-fun:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(14, 165, 233, 0.6);
+        }
+        .btn-fun:active {
+            transform: translateY(1px);
         }
     </style>
 </head>
 <body>
 
     <!-- Watermark Logo -->
-    <div class="fixed top-6 left-6 md:left-10 z-0 pointer-events-none opacity-[0.05] text-4xl md:text-5xl font-extrabold title-font text-slate-900 tracking-tighter">
-        LEONARDO DA VINCI
-    </div>
+    <img src="June 15th- review class part 1.png" alt="Leonardo Da Vinci Logo" class="fixed top-6 left-6 md:left-10 w-32 md:w-48 opacity-15 z-0 pointer-events-none mix-blend-multiply">
 
     <!-- Navigation -->
-    <div class="sticky-nav hidden md:flex">
-        <a href="#intro" class="nav-dot active"><span>Intro</span></a>
-        <a href="#recap-game" class="nav-dot"><span>Team Recap</span></a>
-        <a href="#memory-game" class="nav-dot"><span>Memory Match</span></a>
-        <a href="#anatomy" class="nav-dot"><span>Anatomy</span></a>
-        <a href="#did-you-know-1" class="nav-dot"><span>Fact 1</span></a>
-        <a href="#did-you-know-2" class="nav-dot"><span>Fact 2</span></a>
-        <a href="#nutrition" class="nav-dot"><span>Nutrition</span></a>
-        <a href="#superfoods" class="nav-dot"><span>Superfoods</span></a>
-        <a href="#homework" class="nav-dot"><span>Homework</span></a>
+    <div class="sticky-nav">
+        <a href="#intro" class="nav-dot active"><span>Welcome</span></a>
+        <a href="#vacation" class="nav-dot"><span>Vacation Share</span></a>
+        <a href="#two-truths" class="nav-dot"><span>Two Truths & A Lie</span></a>
+        <a href="#hot-potato" class="nav-dot"><span>Hot Potato</span></a>
+        <a href="#bingo-setup" class="nav-dot"><span>Bingo Setup</span></a>
+        <a href="#bingo-play" class="nav-dot"><span>Bingo Play</span></a>
     </div>
 
-    <section id="intro" class="slide-section bg-white text-center">
+    <!-- 1. Intro -->
+    <section id="intro" class="slide-section bg-gradient-to-br from-teal-100 to-cyan-100 text-center relative z-10">
         <div class="max-w-4xl mx-auto">
-            <div class="inline-block bg-slate-800 text-white font-bold text-lg px-8 py-2 rounded-full mb-12 shadow-md uppercase tracking-widest">
-                Learning to care for our health
+            <div class="inline-block bg-teal-500 text-white font-bold text-lg px-8 py-2 rounded-full mb-8 shadow-md transform -rotate-2">
+                <i class="fas fa-sun mr-2"></i> WELCOME BACK!
             </div>
-            <div class="flex justify-center mb-12 transform scale-75 md:scale-100">
-                <div class="css-logo">
-                    <div class="css-logo-text">
-                        <span class="text-inves">INVES</span><span class="text-tiga">TIGA</span>
-                        <div class="relative"><span class="text-dor">DOR</span><span class="text-es">ES</span><div class="css-magnifier"></div></div>
-                        <span class="text-davinci">DA VINCI</span>
-                    </div>
-                </div>
-            </div>
-            <h1 class="text-5xl md:text-6xl font-black title-font text-slate-800 mb-4 uppercase tracking-wide">
-                Healthy Education
+            
+            <h1 class="text-6xl md:text-8xl font-extrabold title-font text-teal-800 mb-6 drop-shadow-sm">
+                8th Grade
             </h1>
-            <p class="text-2xl text-slate-500 font-bold mb-12">Part 3: The Human Body & Nutrition</p>
-            <div class="mt-8 text-slate-400 animate-bounce">
+            <p class="text-3xl md:text-4xl text-cyan-700 font-bold mb-12 title-font">
+                Ready for a new semester?
+            </p>
+            
+            <div class="flex justify-center gap-4 mb-10">
+                <span class="bg-white px-4 py-2 rounded-lg font-bold text-slate-600 shadow-sm"><i class="fas fa-plane-departure text-blue-400 mr-2"></i> Vacation Recap</span>
+                <span class="bg-white px-4 py-2 rounded-lg font-bold text-slate-600 shadow-sm"><i class="fas fa-bomb text-red-400 mr-2"></i> Hot Potato</span>
+                <span class="bg-white px-4 py-2 rounded-lg font-bold text-slate-600 shadow-sm"><i class="fas fa-border-all text-purple-400 mr-2"></i> Verb Bingo</span>
+            </div>
+
+            <div class="mt-8 text-teal-500 animate-bounce">
                 <i class="fas fa-chevron-down text-4xl"></i>
             </div>
         </div>
     </section>
 
-    <section id="recap-game" class="slide-section bg-slate-900 text-white">
-        <div class="max-w-5xl mx-auto w-full">
-            <div class="text-center mb-8">
-                <h2 class="text-6xl font-black title-font italic transform -skew-x-12 mb-6 tracking-widest" style="text-shadow: 4px 4px 0 #3b82f6;">TEAM RECAP.</h2>
-                <p class="text-slate-400 mb-4 font-bold text-xl">Pick a number and answer the question!</p>
+    <!-- 2. Vacation Share & Name Wheel -->
+    <section id="vacation" class="slide-section bg-white relative z-10">
+        <div class="max-w-6xl mx-auto w-full grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+            
+            <!-- Left: Prompts -->
+            <div>
+                <h2 class="text-4xl font-bold title-font text-slate-800 mb-6"><i class="fas fa-suitcase-rolling text-cyan-500 mr-3"></i> How was your vacation?</h2>
+                <p class="text-xl text-slate-600 mb-8">Let's share our experiences! Use these prompts to build your sentences:</p>
                 
-                <!-- Scoreboard -->
-                <div class="flex justify-center gap-12 mb-8 bg-slate-800 p-4 rounded-2xl border-4 border-slate-700 max-w-2xl mx-auto">
-                    <div class="text-center">
-                        <div class="bg-cyan-500 text-slate-900 font-black px-6 py-1 rounded mb-2 text-xl title-font">Team 1</div>
-                        <div class="text-5xl font-black title-font" id="score1">0</div>
+                <div class="space-y-4 text-xl font-bold text-slate-700">
+                    <div class="bg-cyan-50 p-4 rounded-xl border-l-4 border-cyan-500 shadow-sm flex items-center gap-3">
+                        <i class="fas fa-map-marker-alt text-cyan-400 text-2xl"></i>
+                        <p>This vacation I went to...</p>
                     </div>
-                    <div class="w-1 bg-slate-700 rounded"></div>
-                    <div class="text-center">
-                        <div class="bg-amber-400 text-slate-900 font-black px-6 py-1 rounded mb-2 text-xl title-font">Team 2</div>
-                        <div class="text-5xl font-black title-font" id="score2">0</div>
+                    <div class="bg-teal-50 p-4 rounded-xl border-l-4 border-teal-500 shadow-sm flex items-center gap-3">
+                        <i class="fas fa-running text-teal-400 text-2xl"></i>
+                        <p>I did...</p>
+                    </div>
+                    <div class="bg-orange-50 p-4 rounded-xl border-l-4 border-orange-500 shadow-sm flex items-center gap-3">
+                        <i class="fas fa-hamburger text-orange-400 text-2xl"></i>
+                        <p>I ate...</p>
+                    </div>
+                    <div class="bg-purple-50 p-4 rounded-xl border-l-4 border-purple-500 shadow-sm flex items-center gap-3">
+                        <i class="fas fa-camera text-purple-400 text-2xl"></i>
+                        <p>I took...</p>
                     </div>
                 </div>
             </div>
 
-            <!-- 20 Grid -->
-            <div class="jeopardy-grid" id="jeopardy-board">
-                <!-- Generated by JS -->
-            </div>
-        </div>
-    </section>
-
-    <div class="modal" id="question-modal">
-        <div class="modal-content relative">
-            <button onclick="closeModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-800 text-2xl"><i class="fas fa-times"></i></button>
-            <h3 class="text-3xl font-black title-font text-blue-600 mb-6" id="modal-title">Question</h3>
-            <p class="text-3xl font-bold text-slate-700 mb-8 leading-tight" id="modal-question"></p>
-            
-            <div id="modal-answer-box" class="hidden mb-8">
-                <p class="text-sm font-bold text-green-500 uppercase tracking-widest mb-2">Correct Answer</p>
-                <p class="text-2xl font-black text-slate-800 bg-green-50 p-6 rounded-xl border-2 border-green-200" id="modal-answer"></p>
-            </div>
-
-            <button onclick="showAnswer()" id="btn-show-ans" class="bg-slate-800 hover:bg-slate-700 text-white font-bold py-3 px-8 rounded-full text-xl shadow-lg w-full mb-6">Show Answer</button>
-
-            <div id="modal-controls" class="hidden grid grid-cols-3 gap-4">
-                <button onclick="awardPoints(1)" class="bg-cyan-500 hover:bg-cyan-400 text-slate-900 font-black py-3 rounded-xl border-b-4 border-cyan-600 active:border-b-0 active:translate-y-1 text-lg">Team 1 Correct (+10)</button>
-                <button onclick="awardPoints(0)" class="bg-slate-200 hover:bg-slate-300 text-slate-600 font-black py-3 rounded-xl border-b-4 border-slate-400 active:border-b-0 active:translate-y-1 text-lg">Nobody / Skip</button>
-                <button onclick="awardPoints(2)" class="bg-amber-400 hover:bg-amber-300 text-slate-900 font-black py-3 rounded-xl border-b-4 border-amber-500 active:border-b-0 active:translate-y-1 text-lg">Team 2 Correct (+10)</button>
-            </div>
-        </div>
-    </div>
-
-    <section id="memory-game" class="slide-section bg-emerald-50 text-slate-800">
-        <div class="max-w-5xl mx-auto w-full">
-            <div class="text-center mb-10">
-                <h2 class="text-5xl font-black title-font text-emerald-600 mb-4"><i class="fas fa-puzzle-piece mr-3"></i> Memory Match</h2>
-                <p class="text-slate-600 text-xl font-bold mb-6">Match the Nutrient to its Function or Location!</p>
+            <!-- Right: Name Wheel -->
+            <div class="bg-slate-50 p-8 rounded-3xl border border-slate-200 shadow-xl flex flex-col items-center">
+                <h3 class="text-2xl font-bold title-font text-slate-800 mb-4"><i class="fas fa-random text-blue-500 mr-2"></i> Student Picker</h3>
                 
-                <div class="flex justify-center gap-12 mb-8 bg-white p-4 rounded-2xl border-4 border-emerald-200 max-w-2xl mx-auto shadow-sm">
-                    <div id="mem-team1-box" class="text-center p-4 rounded-xl transition-all duration-300 team-active" style="background-color: #e0f2fe;">
-                        <div class="bg-cyan-500 text-white font-black px-6 py-1 rounded mb-2 text-xl title-font">Team 1</div>
-                        <div class="text-5xl font-black title-font text-slate-800" id="mem-score1">0</div>
-                    </div>
-                    <div class="w-1 bg-slate-200 rounded"></div>
-                    <div id="mem-team2-box" class="text-center p-4 rounded-xl transition-all duration-300">
-                        <div class="bg-amber-400 text-white font-black px-6 py-1 rounded mb-2 text-xl title-font">Team 2</div>
-                        <div class="text-5xl font-black title-font text-slate-800" id="mem-score2">0</div>
-                    </div>
-                </div>
-            </div>
+                <textarea id="name-list" class="w-full bg-white border-2 border-slate-300 rounded-xl p-3 mb-4 text-sm resize-none focus:outline-none focus:border-blue-500" rows="3" placeholder="Paste student names here, separated by commas (e.g., Ana, João, Maria...)"></textarea>
+                
+                <button onclick="loadNames()" class="text-sm font-bold text-blue-600 bg-blue-100 px-4 py-1 rounded-full mb-6 hover:bg-blue-200">Load Names</button>
 
-            <!-- 20 Cards Grid -->
-            <div class="mem-grid" id="mem-board">
-                <!-- Generated by JS -->
+                <div class="w-full h-32 bg-white border-4 border-slate-800 rounded-2xl flex items-center justify-center mb-6 shadow-inner relative overflow-hidden">
+                    <div id="chosen-name" class="text-4xl font-black text-slate-800 title-font z-10 transition-all duration-100">?????</div>
+                    <!-- Decorative overlay -->
+                    <div class="absolute inset-0 bg-gradient-to-b from-black/10 via-transparent to-black/10 pointer-events-none"></div>
+                </div>
+
+                <button onclick="spinWheel()" id="spin-btn" class="btn-fun w-full" disabled><i class="fas fa-sync-alt mr-2"></i> Pick a Student!</button>
             </div>
             
-            <div class="text-center mt-10">
-                <p id="mem-msg" class="text-3xl font-black text-emerald-600 hidden animate-pulse bg-white inline-block px-10 py-4 rounded-full border-4 border-emerald-400 shadow-xl">All Matched! Great memory! <i class="fas fa-check-circle ml-2"></i></p>
-                <br>
-                <button onclick="resetMemory()" class="mt-6 bg-emerald-600 hover:bg-emerald-500 text-white px-8 py-3 rounded-full font-bold transition-colors shadow-lg text-lg"><i class="fas fa-sync-alt mr-2"></i> Restart Memory Game</button>
-            </div>
         </div>
     </section>
 
-    <section id="anatomy" class="slide-section bg-indigo-50">
-        <div class="max-w-6xl mx-auto w-full text-center">
-            <h2 class="text-5xl font-black title-font text-indigo-900 mb-4">Where Are They Located?</h2>
-            <p class="text-xl text-slate-600 font-bold mb-10">Match the Organ to its correct Number on the body map!</p>
-
-            <div class="flex flex-col lg:flex-row gap-8 items-start">
-                <!-- Organs List (Left) -->
-                <div class="w-full lg:w-1/3 grid grid-cols-2 lg:grid-cols-1 gap-3">
-                    <button class="match-btn organ-btn" data-id="spleen"><i class="fas fa-disease text-purple-500 mr-2"></i> Spleen</button>
-                    <button class="match-btn organ-btn" data-id="kidneys"><i class="fas fa-tint text-orange-500 mr-2"></i> Kidneys</button>
-                    <button class="match-btn organ-btn" data-id="brain"><i class="fas fa-brain text-pink-500 mr-2"></i> Brain</button>
-                    <button class="match-btn organ-btn" data-id="stomach"><i class="fas fa-hamburger text-yellow-500 mr-2"></i> Stomach</button>
-                    <button class="match-btn organ-btn" data-id="intestines"><i class="fas fa-route text-green-500 mr-2"></i> Intestines</button>
-                    <button class="match-btn organ-btn" data-id="heart"><i class="fas fa-heart text-red-500 mr-2"></i> Heart</button>
-                    <button class="match-btn organ-btn" data-id="bladder"><i class="fas fa-water text-blue-500 mr-2"></i> Bladder</button>
-                    <button class="match-btn organ-btn" data-id="liver"><i class="fas fa-shield-virus text-emerald-600 mr-2"></i> Liver</button>
-                    <button class="match-btn organ-btn" data-id="lungs"><i class="fas fa-lungs text-sky-400 mr-2"></i> Lungs</button>
-                    <button class="match-btn organ-btn" data-id="pancreas"><i class="fas fa-leaf text-amber-400 mr-2"></i> Pancreas</button>
-                </div>
-
-                <!-- Numbers Body Map (Right) -->
-                <div class="w-full lg:w-2/3 bg-white p-8 rounded-3xl shadow-xl border-4 border-indigo-100 flex flex-col items-center justify-center">
-                    <div class="grid grid-cols-2 gap-4 w-full text-lg">
-                        <button class="match-btn num-btn" data-match="brain">1. Inside the head</button>
-                        <button class="match-btn num-btn" data-match="heart">2. Center of chest</button>
-                        <button class="match-btn num-btn" data-match="lungs">3. Sides of the chest</button>
-                        <button class="match-btn num-btn" data-match="liver">4. Right side of abdomen</button>
-                        <button class="match-btn num-btn" data-match="stomach">5. Left side of abdomen</button>
-                        <button class="match-btn num-btn" data-match="pancreas">6. Behind the stomach</button>
-                        <button class="match-btn num-btn" data-match="spleen">7. Far left, near stomach</button>
-                        <button class="match-btn num-btn" data-match="kidneys">8. Lower back (both sides)</button>
-                        <button class="match-btn num-btn" data-match="intestines">9. Lower abdomen (tubes)</button>
-                        <button class="match-btn num-btn" data-match="bladder">10. Very bottom (pelvis)</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="did-you-know-1" class="slide-section bg-slate-50">
-        <div class="max-w-4xl mx-auto w-full text-center">
-            <div class="inline-flex items-center gap-4 bg-yellow-400 text-slate-900 px-8 py-3 rounded-full font-black title-font text-3xl mb-12 shadow-lg border-4 border-yellow-200 transform -rotate-1">
-                <i class="far fa-lightbulb"></i> DID YOU KNOW?
-            </div>
-
-            <h3 class="text-4xl font-bold text-slate-800 mb-8">The <span class="text-pink-500">brain</span> is about the size of a...</h3>
+    <!-- 2.5 Two Truths and a Lie -->
+    <section id="two-truths" class="slide-section bg-slate-50 relative z-10 border-b-4 border-dashed border-blue-200">
+        <div class="max-w-5xl mx-auto w-full flex flex-col md:flex-row items-center gap-10">
             
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10" id="trivia-1-opts">
-                <div class="trivia-option" onclick="checkTrivia(1, this, false)">🍎 Apple</div>
-                <div class="trivia-option" onclick="checkTrivia(1, this, true)">🥥 Coconut</div>
-                <div class="trivia-option" onclick="checkTrivia(1, this, false)">🍉 Watermelon</div>
+            <div class="flex-1">
+                <span class="bg-blue-500 text-white font-bold px-4 py-1 rounded-full text-sm uppercase tracking-widest mb-4 inline-block"><i class="fas fa-user-secret mr-2"></i> Detective Time</span>
+                <h2 class="text-5xl font-bold title-font text-slate-800 mb-6">Two Truths & A Lie</h2>
+                <p class="text-xl text-slate-600 mb-6 font-medium">Let's see if you can trick your classmates! Write down 3 sentences about your vacation.</p>
+                
+                <ul class="space-y-4 text-lg text-slate-700 bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                    <li class="flex items-start gap-3"><i class="fas fa-check text-green-500 mt-1 text-xl"></i> <div><strong>Two sentences must be TRUE.</strong><br><span class="text-sm text-slate-500">e.g., I went to the beach. I ate a whole pizza.</span></div></li>
+                    <li class="flex items-start gap-3"><i class="fas fa-times text-red-500 mt-1 text-xl"></i> <div><strong>One sentence must be a LIE.</strong><br><span class="text-sm text-slate-500">e.g., I met Taylor Swift at the mall.</span></div></li>
+                    <li class="flex items-start gap-3"><i class="fas fa-bullhorn text-blue-500 mt-1 text-xl"></i> <div><strong>Read them aloud.</strong> The class will vote on which one is the lie!</div></li>
+                </ul>
             </div>
 
-            <div id="reveal-1" class="hidden-reveal">
-                <div class="bg-white p-8 rounded-3xl shadow-xl border-4 border-pink-100 flex flex-col md:flex-row items-center justify-center gap-8">
-                    <i class="fas fa-brain text-8xl text-pink-400 drop-shadow-md"></i>
-                    <span class="text-5xl font-black text-slate-300">=</span>
-                    <span class="text-8xl">🥥</span>
+            <div class="bg-white p-8 rounded-full w-72 h-72 flex flex-col items-center justify-center shrink-0 border-8 border-blue-100 shadow-2xl relative">
+                <p class="text-sm font-bold text-slate-400 uppercase tracking-widest mb-2 text-center">Writing Time</p>
+                <div id="writing-timer" class="text-6xl font-black title-font text-blue-600 mb-4 font-mono">03:00</div>
+                <div class="flex gap-2">
+                    <button onclick="startWritingTimer()" class="bg-green-500 hover:bg-green-400 text-white w-12 h-12 rounded-full flex items-center justify-center transition-transform hover:scale-110 shadow-md text-xl"><i class="fas fa-play"></i></button>
+                    <button onclick="pauseWritingTimer()" class="bg-yellow-500 hover:bg-yellow-400 text-white w-12 h-12 rounded-full flex items-center justify-center transition-transform hover:scale-110 shadow-md text-xl"><i class="fas fa-pause"></i></button>
+                    <button onclick="resetWritingTimer()" class="bg-red-500 hover:bg-red-400 text-white w-12 h-12 rounded-full flex items-center justify-center transition-transform hover:scale-110 shadow-md text-xl"><i class="fas fa-redo"></i></button>
                 </div>
-                <p class="text-xl text-slate-600 font-bold mt-6">Yes! An adult human brain weighs about 1.3 kg (3 pounds), very similar to a coconut!</p>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- 3. Hot Potato (Revisa Vinci) -->
+    <section id="hot-potato" class="slide-section bg-slate-900 text-white relative z-10">
+        <div class="max-w-5xl mx-auto w-full text-center">
+            <span class="bg-red-500 text-white font-bold px-4 py-1 rounded-full text-sm uppercase tracking-widest mb-4 inline-block">Revisa Vinci Game</span>
+            <h2 class="text-5xl font-bold title-font text-red-400 mb-4">Digital Hot Potato</h2>
+            <p class="text-xl text-slate-300 mb-12 max-w-2xl mx-auto">Pass an object around the classroom while the timer ticks. When it explodes, the student holding the object must answer the grammar question!</p>
+
+            <div class="flex flex-col items-center justify-center">
+                <!-- The Bomb -->
+                <div id="bomb-icon" class="bomb-container mb-8">
+                    <i class="fas fa-bomb text-slate-500 drop-shadow-lg"></i>
+                </div>
+
+                <!-- Controls -->
+                <div class="flex gap-4 mb-10" id="bomb-controls">
+                    <button onclick="startHotPotato()" class="bg-red-500 hover:bg-red-400 text-white font-bold py-3 px-8 rounded-full text-xl shadow-[0_0_15px_rgba(239,68,68,0.5)] transition-all hover:scale-105">
+                        <i class="fas fa-play mr-2"></i> Start Timer
+                    </button>
+                </div>
+
+                <!-- Question Reveal Card (Hidden Initially) -->
+                <div id="question-card" class="hidden w-full max-w-2xl bg-white text-slate-800 p-8 rounded-3xl shadow-2xl transform scale-95 opacity-0 transition-all duration-500 border-b-8 border-red-500">
+                    <h3 class="text-sm font-bold text-red-500 uppercase tracking-widest mb-4">Your Question:</h3>
+                    <p id="question-text" class="text-3xl font-bold title-font mb-8 leading-tight">Question goes here?</p>
+                    <button onclick="resetHotPotato()" class="bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold py-2 px-6 rounded-lg transition-colors">
+                        Close & Reset
+                    </button>
+                </div>
             </div>
         </div>
     </section>
 
-    <section id="did-you-know-2" class="slide-section bg-slate-50">
-        <div class="max-w-4xl mx-auto w-full text-center">
-            <div class="inline-flex items-center gap-4 bg-yellow-400 text-slate-900 px-8 py-3 rounded-full font-black title-font text-3xl mb-12 shadow-lg border-4 border-yellow-200 transform rotate-1">
-                <i class="far fa-lightbulb"></i> DID YOU KNOW?
-            </div>
-
-            <h3 class="text-4xl font-bold text-slate-800 mb-8">The <span class="text-emerald-600">liver</span> is almost the size of an...</h3>
-            
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10" id="trivia-2-opts">
-                <div class="trivia-option" onclick="checkTrivia(2, this, false)">⚾ Baseball</div>
-                <div class="trivia-option" onclick="checkTrivia(2, this, true)">🏈 American Football</div>
-                <div class="trivia-option" onclick="checkTrivia(2, this, false)">🎾 Tennis Ball</div>
-            </div>
-
-            <div id="reveal-2" class="hidden-reveal">
-                <div class="bg-white p-8 rounded-3xl shadow-xl border-4 border-emerald-100 flex flex-col md:flex-row items-center justify-center gap-8">
-                    <i class="fas fa-shield-virus text-8xl text-emerald-500 drop-shadow-md"></i>
-                    <span class="text-5xl font-black text-slate-300">=</span>
-                    <i class="fas fa-football-ball text-8xl text-amber-700 drop-shadow-md"></i>
-                </div>
-                <p class="text-xl text-slate-600 font-bold mt-6">Correct! It's your largest solid internal organ, roughly the size of an American football!</p>
-            </div>
-        </div>
-    </section>
-
-    <section id="nutrition" class="slide-section bg-sky-900 text-white">
+    <!-- 4. Bingo Setup (Past Participles) -->
+    <section id="bingo-setup" class="slide-section bg-purple-50 relative z-10">
         <div class="max-w-6xl mx-auto w-full">
-            <h2 class="text-5xl font-black title-font text-sky-300 mb-6 text-center"><i class="fas fa-apple-alt mr-3"></i> Nutrition Basics</h2>
-            <p class="text-2xl text-center text-sky-100 mb-12">Healthy foods fuel different parts of our body and help them work better.</p>
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
-                <!-- What food provides -->
-                <div class="bg-white/10 p-8 rounded-3xl border border-white/20 backdrop-blur-sm">
-                    <h3 class="text-3xl font-bold text-yellow-400 mb-6 border-b border-white/20 pb-4">FOOD Provides:</h3>
-                    <ul class="space-y-4 text-2xl font-bold text-white">
-                        <li class="flex items-center gap-4"><div class="w-12 h-12 bg-yellow-400 rounded-full flex items-center justify-center text-slate-900"><i class="fas fa-bolt"></i></div> Energy</li>
-                        <li class="flex items-center gap-4"><div class="w-12 h-12 bg-emerald-400 rounded-full flex items-center justify-center text-slate-900"><i class="fas fa-puzzle-piece"></i></div> Nutrients</li>
-                        <li class="flex items-center gap-4"><div class="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center text-slate-900"><i class="fas fa-seedling"></i></div> Growth</li>
-                        <li class="flex items-center gap-4"><div class="w-12 h-12 bg-red-400 rounded-full flex items-center justify-center text-slate-900"><i class="fas fa-heart"></i></div> Health</li>
-                    </ul>
+            <div class="flex flex-col md:flex-row items-center justify-between mb-8">
+                <div>
+                    <h2 class="text-4xl font-bold title-font text-purple-700 mb-2"><i class="fas fa-table mr-3"></i> Verb Bingo: Setup</h2>
+                    <p class="text-lg text-slate-600">Draw a 3x3 grid in your notebook and choose 9 Past Participles from the board.</p>
                 </div>
-
-                <!-- 5 Food Groups Mapping -->
-                <div class="bg-white/10 p-8 rounded-3xl border border-white/20 backdrop-blur-sm flex flex-col">
-                    <h3 class="text-3xl font-bold text-sky-300 mb-6 border-b border-white/20 pb-4">The 5 Food Groups</h3>
-                    <p class="text-slate-300 mb-6 font-semibold">Match the Group to its main benefit! Click a button below to reveal.</p>
-                    
-                    <div class="space-y-3 flex-1 flex flex-col justify-center">
-                        <button onclick="revealGroup(this, 'Vitamins, Immune Sys, Digestion')" class="bg-slate-800 hover:bg-slate-700 text-white font-bold py-3 px-6 rounded-xl border border-slate-600 transition flex justify-between items-center text-left">
-                            <span><i class="fas fa-carrot text-orange-400 mr-2"></i> Fruit & Vegetables</span>
-                            <span class="text-sm bg-slate-600 px-3 py-1 rounded text-slate-300 group-ans">Tap to reveal</span>
-                        </button>
-                        <button onclick="revealGroup(this, 'Energy')" class="bg-slate-800 hover:bg-slate-700 text-white font-bold py-3 px-6 rounded-xl border border-slate-600 transition flex justify-between items-center text-left">
-                            <span><i class="fas fa-bread-slice text-yellow-600 mr-2"></i> Carbohydrates</span>
-                            <span class="text-sm bg-slate-600 px-3 py-1 rounded text-slate-300 group-ans">Tap to reveal</span>
-                        </button>
-                        <button onclick="revealGroup(this, 'Muscles, Growth, Repair')" class="bg-slate-800 hover:bg-slate-700 text-white font-bold py-3 px-6 rounded-xl border border-slate-600 transition flex justify-between items-center text-left">
-                            <span><i class="fas fa-drumstick-bite text-red-400 mr-2"></i> Proteins</span>
-                            <span class="text-sm bg-slate-600 px-3 py-1 rounded text-slate-300 group-ans">Tap to reveal</span>
-                        </button>
-                        <button onclick="revealGroup(this, 'Calcium, Bones, Teeth')" class="bg-slate-800 hover:bg-slate-700 text-white font-bold py-3 px-6 rounded-xl border border-slate-600 transition flex justify-between items-center text-left">
-                            <span><i class="fas fa-cheese text-yellow-200 mr-2"></i> Dairy</span>
-                            <span class="text-sm bg-slate-600 px-3 py-1 rounded text-slate-300 group-ans">Tap to reveal</span>
-                        </button>
-                        <button onclick="revealGroup(this, 'Energy Store')" class="bg-slate-800 hover:bg-slate-700 text-white font-bold py-3 px-6 rounded-xl border border-slate-600 transition flex justify-between items-center text-left">
-                            <span><i class="fas fa-oil-can text-amber-500 mr-2"></i> Fats & Oils</span>
-                            <span class="text-sm bg-slate-600 px-3 py-1 rounded text-slate-300 group-ans">Tap to reveal</span>
-                        </button>
+                <div class="mt-4 md:mt-0 text-center">
+                    <div class="w-24 h-24 bg-white border-4 border-purple-300 rounded-xl grid grid-cols-3 grid-rows-3 gap-1 p-1 shadow-md transform rotate-3">
+                        <div class="bg-purple-100 rounded-sm"></div><div class="bg-purple-200 rounded-sm"></div><div class="bg-purple-100 rounded-sm"></div>
+                        <div class="bg-purple-200 rounded-sm"></div><div class="bg-purple-400 rounded-sm flex items-center justify-center text-white text-xs font-bold"><i class="fas fa-star"></i></div><div class="bg-purple-200 rounded-sm"></div>
+                        <div class="bg-purple-100 rounded-sm"></div><div class="bg-purple-200 rounded-sm"></div><div class="bg-purple-100 rounded-sm"></div>
                     </div>
+                </div>
+            </div>
+
+            <div class="bg-white p-8 rounded-3xl shadow-lg border border-purple-100">
+                <h3 class="text-xl font-bold text-slate-700 mb-6 border-b border-slate-200 pb-2">Past Participles Word Bank</h3>
+                <div id="bingo-word-bank" class="bingo-grid">
+                    <!-- Populated by JS -->
                 </div>
             </div>
         </div>
     </section>
 
-    <section id="superfoods" class="slide-section bg-white">
-        <div class="max-w-6xl mx-auto w-full text-center">
-            <h2 class="text-5xl font-black title-font text-slate-800 mb-4">Every organ has a favourite food! 🍽️</h2>
-            <p class="text-xl text-slate-500 font-bold mb-12">Click "Reveal" to discover what fuel these organs love the most.</p>
+    <!-- 5. Bingo Play (Caller) -->
+    <section id="bingo-play" class="slide-section bg-indigo-900 text-white relative z-10 border-none">
+        <div class="max-w-5xl mx-auto w-full text-center">
+            <h2 class="text-5xl font-bold title-font text-indigo-300 mb-4">Bingo Caller</h2>
+            <p class="text-lg text-indigo-200 mb-10">Teacher: Call out the Base Form. Students: Mark the Past Participle!</p>
 
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <!-- Heart -->
-                <div class="bg-red-50 p-8 rounded-3xl border-2 border-red-200 flex flex-col items-center">
-                    <i class="fas fa-heartbeat text-7xl text-red-500 mb-6"></i>
-                    <h3 class="text-3xl font-black text-red-700 mb-4">Heart</h3>
-                    <p class="text-slate-600 font-bold mb-6">Needs a special fat to stay healthy and pump strongly.</p>
-                    <button onclick="revealSuperfood('sf-heart')" class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-6 rounded-full w-full mt-auto transition">Reveal</button>
-                    <div id="sf-heart" class="hidden w-full mt-4 bg-white p-4 rounded-xl border border-red-200 shadow-sm animate-[popIn_0.3s_forwards]">
-                        <p class="font-black text-red-600 text-xl mb-1">Omega 3</p>
-                        <p class="text-slate-500 font-bold text-sm"><i class="fas fa-fish text-blue-400 mr-1"></i> Found in: Fish (Salmon, Tuna)</p>
+            <div class="bg-indigo-950/80 p-10 rounded-[3rem] border border-indigo-700 shadow-2xl relative overflow-hidden">
+                <!-- Background decoration -->
+                <i class="fas fa-bullhorn absolute -left-10 -bottom-10 text-9xl text-indigo-800 opacity-30"></i>
+
+                <div class="relative z-10">
+                    <p class="text-sm font-bold text-indigo-400 uppercase tracking-widest mb-4">Current Verb (Base Form)</p>
+                    <div id="current-verb" class="text-7xl md:text-8xl font-black title-font text-white mb-10 h-32 flex items-center justify-center drop-shadow-lg">
+                        Ready?
                     </div>
-                </div>
 
-                <!-- Brain -->
-                <div class="bg-pink-50 p-8 rounded-3xl border-2 border-pink-200 flex flex-col items-center">
-                    <i class="fas fa-brain text-7xl text-pink-400 mb-6"></i>
-                    <h3 class="text-3xl font-black text-pink-700 mb-4">Brain</h3>
-                    <p class="text-slate-600 font-bold mb-6">Needs a mineral to carry oxygen so you can think fast.</p>
-                    <button onclick="revealSuperfood('sf-brain')" class="bg-pink-500 hover:bg-pink-600 text-white font-bold py-2 px-6 rounded-full w-full mt-auto transition">Reveal</button>
-                    <div id="sf-brain" class="hidden w-full mt-4 bg-white p-4 rounded-xl border border-pink-200 shadow-sm animate-[popIn_0.3s_forwards]">
-                        <p class="font-black text-pink-600 text-xl mb-1">Iron (Fe)</p>
-                        <p class="text-slate-500 font-bold text-sm"><i class="fas fa-drumstick-bite text-orange-400 mr-1"></i> Found in: Chicken, Meat, Beans</p>
+                    <button onclick="callNextVerb()" id="call-verb-btn" class="bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-400 hover:to-purple-400 text-white font-bold py-4 px-10 rounded-full text-2xl shadow-[0_0_20px_rgba(236,72,153,0.5)] transition-transform hover:scale-105 mb-10">
+                        Draw Next Verb
+                    </button>
+
+                    <div class="border-t border-indigo-800 pt-6 text-left">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="text-indigo-300 font-bold"><i class="fas fa-history mr-2"></i> History (Base &rarr; P.P.)</h3>
+                            <span id="verb-count" class="text-xs bg-indigo-800 px-3 py-1 rounded-full text-indigo-200">0/24 Called</span>
+                        </div>
+                        <div id="called-verbs-list" class="flex flex-wrap gap-2 max-h-40 overflow-y-auto pr-2 custom-scrollbar">
+                            <!-- Populated by JS -->
+                        </div>
                     </div>
-                </div>
-
-                <!-- Liver -->
-                <div class="bg-emerald-50 p-8 rounded-3xl border-2 border-emerald-200 flex flex-col items-center">
-                    <i class="fas fa-shield-virus text-7xl text-emerald-500 mb-6"></i>
-                    <h3 class="text-3xl font-black text-emerald-700 mb-4">Liver</h3>
-                    <p class="text-slate-600 font-bold mb-6">Needs a specific vitamin to help clean toxins from your body.</p>
-                    <button onclick="revealSuperfood('sf-liver')" class="bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-2 px-6 rounded-full w-full mt-auto transition">Reveal</button>
-                    <div id="sf-liver" class="hidden w-full mt-4 bg-white p-4 rounded-xl border border-emerald-200 shadow-sm animate-[popIn_0.3s_forwards]">
-                        <p class="font-black text-emerald-600 text-xl mb-1">Vitamin A</p>
-                        <p class="text-slate-500 font-bold text-sm"><i class="fas fa-carrot text-orange-500 mr-1"></i> Found in: Carrots, Fish, Spinach</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="homework" class="slide-section bg-slate-900 text-center border-none">
-        <div class="max-w-4xl mx-auto mt-10">
-            <div class="bg-white p-12 rounded-3xl shadow-2xl border-4 border-cyan-400 transform rotate-1">
-                <div class="flex justify-center gap-6 mb-6 text-6xl">
-                    <i class="fas fa-book text-blue-500"></i>
-                    <i class="fas fa-clock text-red-500"></i>
-                    <i class="fas fa-pencil-alt text-yellow-500"></i>
-                </div>
-                <h2 class="text-6xl font-black title-font text-slate-800 uppercase mb-8 tracking-widest">Homework</h2>
-                
-                <p class="text-2xl text-slate-600 font-bold mb-6">For each organ listed below, research and write down in your notebook:</p>
-                <div class="bg-slate-100 p-6 rounded-xl border border-slate-200 text-left max-w-2xl mx-auto mb-8">
-                    <ul class="text-xl text-slate-700 space-y-3 font-semibold list-disc pl-8">
-                        <li>Its approximate size</li>
-                        <li>Its approximate weight</li>
-                        <li>Types of food that help keep it healthy</li>
-                    </ul>
-                </div>
-
-                <div class="flex flex-wrap justify-center gap-3">
-                    <span class="bg-slate-800 text-white px-4 py-2 rounded-lg font-bold">Heart</span>
-                    <span class="bg-slate-800 text-white px-4 py-2 rounded-lg font-bold">Brain</span>
-                    <span class="bg-slate-800 text-white px-4 py-2 rounded-lg font-bold">Intestines</span>
-                    <span class="bg-slate-800 text-white px-4 py-2 rounded-lg font-bold">Bladder</span>
-                    <span class="bg-slate-800 text-white px-4 py-2 rounded-lg font-bold">Lungs</span>
-                    <span class="bg-slate-800 text-white px-4 py-2 rounded-lg font-bold">Liver</span>
-                    <span class="bg-slate-800 text-white px-4 py-2 rounded-lg font-bold">Spleen</span>
-                    <span class="bg-slate-800 text-white px-4 py-2 rounded-lg font-bold">Stomach</span>
-                    <span class="bg-slate-800 text-white px-4 py-2 rounded-lg font-bold">Kidneys</span>
-                    <span class="bg-slate-800 text-white px-4 py-2 rounded-lg font-bold">Pancreas</span>
                 </div>
             </div>
             
-            <div class="mt-16 text-5xl font-black text-white tracking-widest animate-pulse title-font">
-                CLASS DISMISSED! <i class="fas fa-door-open ml-2 text-cyan-400"></i>
+            <div class="mt-8">
+                <button onclick="resetBingo()" class="text-indigo-400 hover:text-white underline text-sm"><i class="fas fa-redo mr-1"></i> Reset Game</button>
             </div>
         </div>
     </section>
 
     <script>
-        // Sticky Nav logic
+        // --- 1. Global Setup & Smooth Scroll ---
         document.querySelectorAll('.nav-dot').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
                 e.preventDefault();
@@ -530,287 +372,322 @@
             });
         });
 
-        // --- Jeopardy / Recap Game Logic (Expanded to 20 Questions) ---
-        const jeopardyQuestions = [
-            { q: "Name 3 types of fruits.", a: "Apple, Banana, Orange, Grape, etc." },
-            { q: "What is the main function of the heart?", a: "To pump blood around the body." },
-            { q: "Is a carrot a carbohydrate or a vitamin source?", a: "Vitamin source (Fruit & Vegetables group)." },
-            { q: "Name an organ located inside your head.", a: "Brain." },
-            { q: "What food group does milk belong to?", a: "Dairy." },
-            { q: "Name 2 excellent sources of protein.", a: "Meat, Chicken, Eggs, Beans, Tofu." },
-            { q: "What does the stomach do?", a: "Breaks down and digests food." },
-            { q: "Which organ helps us breathe?", a: "Lungs." },
-            { q: "True or False: We should drink only 2 glasses of water a day.", a: "False! We should drink more (around 6-8 glasses)." },
-            { q: "Name one very unhealthy eating habit.", a: "Eating too much sugar, skipping meals, fast food every day." },
-            { q: "Which organ filters our blood and looks like a bean?", a: "Kidneys." },
-            { q: "What does 'Balanced Diet' mean?", a: "Eating the right amount from all 5 food groups." },
-            { q: "Name a food rich in Omega-3.", a: "Salmon, Tuna, Chia seeds." },
-            { q: "Why are bones important?", a: "They support the body and protect our organs. (Calcium helps them)." },
-            { q: "Which organ is the largest solid internal organ?", a: "Liver." },
-            { q: "Give one example of a Carbohydrate food.", a: "Bread, Pasta, Rice, Potatoes." },
-            { q: "What does the brain need a lot of to work fast?", a: "Oxygen (carried by Iron)." },
-            { q: "Where are the intestines located?", a: "In the lower abdomen." },
-            { q: "Which vitamin is great for the skin and found in oranges?", a: "Vitamin C." },
-            { q: "What is the main function of our muscles?", a: "Movement and strength (fueled by protein)." }
+        // Audio initialization (Tone.js)
+        let audioInit = false;
+        let tickSynth, noiseSynth;
+
+        function initAudio() {
+            if (audioInit) return;
+            Tone.start();
+            
+            // High pitched short tick for the bomb
+            tickSynth = new Tone.Synth({
+                oscillator: { type: "square" },
+                envelope: { attack: 0.01, decay: 0.05, sustain: 0, release: 0 }
+            }).toDestination();
+            tickSynth.volume.value = -10;
+
+            // Noise synth for explosion
+            noiseSynth = new Tone.NoiseSynth({
+                noise: { type: "brown" },
+                envelope: { attack: 0.01, decay: 0.8, sustain: 0, release: 0.5 }
+            }).toDestination();
+            noiseSynth.volume.value = -5;
+
+            audioInit = true;
+        }
+
+        // --- 2. Name Wheel Logic ---
+        let studentsArray = [];
+        
+        function loadNames() {
+            const input = document.getElementById('name-list').value;
+            if(!input.trim()) return alert("Please paste some names first!");
+            
+            studentsArray = input.split(',').map(name => name.trim()).filter(name => name.length > 0);
+            
+            if(studentsArray.length > 0) {
+                document.getElementById('spin-btn').disabled = false;
+                document.getElementById('chosen-name').innerText = "Ready!";
+                document.getElementById('chosen-name').classList.add('text-green-600');
+                setTimeout(() => document.getElementById('chosen-name').classList.remove('text-green-600'), 1000);
+            }
+        }
+
+        function spinWheel() {
+            if(studentsArray.length === 0) return;
+            initAudio(); // ensure audio context is ready
+            
+            const display = document.getElementById('chosen-name');
+            const btn = document.getElementById('spin-btn');
+            btn.disabled = true;
+            
+            let spins = 0;
+            const maxSpins = 20;
+            const spinInterval = setInterval(() => {
+                const randomName = studentsArray[Math.floor(Math.random() * studentsArray.length)];
+                display.innerText = randomName;
+                
+                // Play soft tick
+                if(audioInit) tickSynth.triggerAttackRelease("C6", "32n");
+
+                spins++;
+                if(spins >= maxSpins) {
+                    clearInterval(spinInterval);
+                    btn.disabled = false;
+                    display.classList.add('text-blue-600', 'animate-pop');
+                    setTimeout(() => display.classList.remove('text-blue-600', 'animate-pop'), 500);
+                    
+                    if(audioInit) {
+                        const winSynth = new Tone.Synth().toDestination();
+                        winSynth.volume.value = -10;
+                        winSynth.triggerAttackRelease("C5", "8n");
+                        setTimeout(() => winSynth.triggerAttackRelease("E5", "4n"), 150);
+                    }
+                }
+            }, 100);
+        }
+
+        // --- 3. Hot Potato Logic ---
+        const reviewQuestions = [
+            "Complete: I have never _____ (eat) sushi.",
+            "Make a sentence: (you / ever / travel / abroad) ?",
+            "Complete: Yesterday, we _____ (go) to the park.",
+            "Make a sentence: (she / not / finish / her homework / yet).",
+            "Complete: Look at those clouds! It _____ (rain).",
+            "Answer: What will you be doing this time tomorrow?",
+            "Complete: He _____ (play) video games for 3 hours! (Present Perfect Continuous)",
+            "Make a sentence using the linker 'Although'.",
+            "Vocabulary: Name 3 types of TV shows.",
+            "Comparatives: Emphasize 'A Ferrari is (fast) a Fiat Uno.'",
+            "Complete: I promise I _____ (help) you later.",
+            "Linkers: Fill the blank -> '_______ of the cold, we went swimming.'",
+            "Correct the mistake: 'I have went to the mall yesterday.'",
+            "Make a sentence using 'As soon as'.",
+            "What is the past participle of 'WRITE' and 'RIDE'?",
+            "Vocabulary: Name 2 Compound Adjectives (e.g., well-known).",
+            "Complete: While I was studying, my phone _____ (ring).",
+            "Make a sentence using 'In spite of'.",
+            "Translate to English: 'Eu vou viajar no mês que vem.' (Use Going to)",
+            "Complete: We _____ (know) each other since we were kids."
         ];
 
-        let scores = { team1: 0, team2: 0 };
-        let activeTile = null;
-        let activeQuestionObj = null;
+        let bombTimer;
+        let bombTickInterval;
 
-        function initJeopardy() {
-            const board = document.getElementById('jeopardy-board');
-            for(let i = 0; i < 20; i++) {
-                const btn = document.createElement('button');
-                btn.className = 'jeopardy-btn';
-                btn.innerText = i + 1;
-                btn.onclick = () => openModal(i, btn);
-                board.appendChild(btn);
-            }
-        }
-
-        function openModal(index, btnElement) {
-            if(btnElement.classList.contains('disabled')) return;
+        function startHotPotato() {
+            initAudio();
+            document.getElementById('bomb-controls').classList.add('hidden');
+            document.getElementById('question-card').classList.add('hidden');
+            document.getElementById('question-card').classList.remove('scale-100', 'opacity-100');
             
-            activeTile = btnElement;
-            activeQuestionObj = jeopardyQuestions[index];
+            const icon = document.getElementById('bomb-icon');
+            icon.className = 'bomb-container bomb-active';
+            icon.innerHTML = '<i class="fas fa-bomb drop-shadow-lg"></i>';
 
-            document.getElementById('modal-title').innerText = `Question ${index + 1}`;
-            document.getElementById('modal-question').innerText = activeQuestionObj.q;
+            // Random time between 10s and 25s
+            const duration = Math.floor(Math.random() * 15000) + 10000; 
             
-            // Reset modal states
-            document.getElementById('modal-answer-box').classList.add('hidden');
-            document.getElementById('btn-show-ans').classList.remove('hidden');
-            document.getElementById('modal-controls').classList.add('hidden');
-            
-            document.getElementById('question-modal').classList.add('active');
-        }
-
-        function closeModal() {
-            document.getElementById('question-modal').classList.remove('active');
-        }
-
-        function showAnswer() {
-            document.getElementById('btn-show-ans').classList.add('hidden');
-            document.getElementById('modal-answer').innerText = activeQuestionObj.a;
-            document.getElementById('modal-answer-box').classList.remove('hidden');
-            document.getElementById('modal-controls').classList.remove('hidden');
-        }
-
-        function awardPoints(team) {
-            if (team === 1) scores.team1 += 10;
-            else if (team === 2) scores.team2 += 10;
-            
-            document.getElementById('score1').innerText = scores.team1;
-            document.getElementById('score2').innerText = scores.team2;
-            
-            activeTile.classList.add('disabled');
-            closeModal();
-        }
-
-        initJeopardy();
-
-        // --- Memory Game Logic (20 cards / 10 pairs) ---
-        const memCardsData = [
-            { id: 'c1', text: 'Carbohydrates' }, { id: 'c1', text: 'Energy' },
-            { id: 'c2', text: 'Proteins' }, { id: 'c2', text: 'Muscles & Repair' },
-            { id: 'c3', text: 'Dairy' }, { id: 'c3', text: 'Bones & Teeth' },
-            { id: 'c4', text: 'Fruits & Veggies' }, { id: 'c4', text: 'Vitamins & Immunity' },
-            { id: 'c5', text: 'Fats & Oils' }, { id: 'c5', text: 'Energy Store' },
-            { id: 'c6', text: 'Water' }, { id: 'c6', text: 'Hydration' },
-            { id: 'c7', text: 'Heart' }, { id: 'c7', text: 'Pumps Blood' },
-            { id: 'c8', text: 'Lungs' }, { id: 'c8', text: 'Breathing' },
-            { id: 'c9', text: 'Stomach' }, { id: 'c9', text: 'Digestion' },
-            { id: 'c10', text: 'Brain' }, { id: 'c10', text: 'Thinking' }
-        ];
-
-        let hasFlippedCard = false;
-        let lockBoard = false;
-        let firstCard, secondCard;
-        let memMatches = 0;
-        let memScores = { team1: 0, team2: 0 };
-        let currentMemTeam = 1;
-
-        function updateMemTurnUI() {
-            document.getElementById('mem-team1-box').classList.toggle('team-active', currentMemTeam === 1);
-            document.getElementById('mem-team2-box').classList.toggle('team-active', currentMemTeam === 2);
-            document.getElementById('mem-team1-box').style.backgroundColor = currentMemTeam === 1 ? '#e0f2fe' : 'transparent';
-            document.getElementById('mem-team2-box').style.backgroundColor = currentMemTeam === 2 ? '#fef3c7' : 'transparent';
-        }
-
-        function createMemBoard() {
-            const board = document.getElementById('mem-board');
-            board.innerHTML = '';
-            // Shuffle
-            memCardsData.sort(() => 0.5 - Math.random());
-            
-            memCardsData.forEach((item) => {
-                const card = document.createElement('div');
-                card.classList.add('mem-card');
-                card.dataset.framework = item.id;
-                card.innerHTML = `
-                    <div class="mem-card-inner">
-                        <div class="mem-front"><i class="fas fa-brain"></i></div>
-                        <div class="mem-back">${item.text}</div>
-                    </div>
-                `;
-                card.addEventListener('click', flipMemCard);
-                board.appendChild(card);
-            });
-        }
-
-        function flipMemCard() {
-            if (lockBoard) return;
-            if (this === firstCard) return;
-
-            this.classList.add('flipped');
-
-            if (!hasFlippedCard) {
-                hasFlippedCard = true;
-                firstCard = this;
-                return;
-            }
-
-            secondCard = this;
-            checkMemMatch();
-        }
-
-        function checkMemMatch() {
-            let isMatch = firstCard.dataset.framework === secondCard.dataset.framework;
-            if(isMatch) {
-                disableMemCards();
-                // Award points to the current team
-                if (currentMemTeam === 1) memScores.team1++;
-                else memScores.team2++;
+            // Start audio ticking
+            if(audioInit) {
+                let tickTime = 1000;
+                let lastTick = Tone.now();
                 
-                document.getElementById('mem-score1').innerText = memScores.team1;
-                document.getElementById('mem-score2').innerText = memScores.team2;
-            } else {
-                unflipMemCards();
-            }
-        }
-
-        function disableMemCards() {
-            firstCard.removeEventListener('click', flipMemCard);
-            secondCard.removeEventListener('click', flipMemCard);
-            firstCard.classList.add('matched');
-            secondCard.classList.add('matched');
-            resetMemBoardState();
-            memMatches++;
-            if(memMatches === 10) { // 10 pairs
-                let winnerText = "It's a tie!";
-                if (memScores.team1 > memScores.team2) winnerText = "Team 1 Wins!";
-                if (memScores.team2 > memScores.team1) winnerText = "Team 2 Wins!";
+                // create a simple loop function for ticking that speeds up
+                function playTick() {
+                    tickSynth.triggerAttackRelease("G5", "32n");
+                }
                 
-                const msgEl = document.getElementById('mem-msg');
-                msgEl.innerHTML = `All Matched! ${winnerText} <i class="fas fa-trophy ml-2 text-yellow-400"></i>`;
-                msgEl.classList.remove('hidden');
+                // Speed up logic could go here, but simple interval is safer for browser sync
+                bombTickInterval = setInterval(playTick, 800);
             }
+
+            // Set explosion timeout
+            bombTimer = setTimeout(explodeBomb, duration);
         }
 
-        function unflipMemCards() {
-            lockBoard = true;
+        function explodeBomb() {
+            clearInterval(bombTickInterval);
+            
+            if(audioInit) {
+                noiseSynth.triggerAttackRelease("8n");
+            }
+
+            const icon = document.getElementById('bomb-icon');
+            icon.className = 'bomb-container bomb-exploded';
+            icon.innerHTML = '<i class="fas fa-bomb"></i>'; // keep bomb but change style
+
+            // Pick random question
+            const q = reviewQuestions[Math.floor(Math.random() * reviewQuestions.length)];
+            document.getElementById('question-text').innerText = q;
+
+            // Show card
             setTimeout(() => {
-                firstCard.classList.remove('flipped');
-                secondCard.classList.remove('flipped');
-                
-                // Change turns on a miss
-                currentMemTeam = currentMemTeam === 1 ? 2 : 1;
-                updateMemTurnUI();
-                
-                resetMemBoardState();
+                const card = document.getElementById('question-card');
+                card.classList.remove('hidden');
+                // Allow reflow
+                setTimeout(() => {
+                    card.classList.add('scale-100', 'opacity-100');
+                }, 50);
             }, 1000);
         }
 
-        function resetMemBoardState() {
-            [hasFlippedCard, lockBoard] = [false, false];
-            [firstCard, secondCard] = [null, null];
+        function resetHotPotato() {
+            document.getElementById('question-card').classList.add('hidden');
+            document.getElementById('question-card').classList.remove('scale-100', 'opacity-100');
+            document.getElementById('bomb-controls').classList.remove('hidden');
+            
+            const icon = document.getElementById('bomb-icon');
+            icon.className = 'bomb-container mb-8';
+            icon.innerHTML = '<i class="fas fa-bomb text-slate-500 drop-shadow-lg"></i>';
         }
 
-        function resetMemory() {
-            memMatches = 0;
-            memScores = { team1: 0, team2: 0 };
-            currentMemTeam = 1;
-            document.getElementById('mem-score1').innerText = memScores.team1;
-            document.getElementById('mem-score2').innerText = memScores.team2;
-            updateMemTurnUI();
-            document.getElementById('mem-msg').classList.add('hidden');
-            createMemBoard();
-        }
+        // --- 3.5 Writing Timer Logic (Two Truths) ---
+        let writingInterval;
+        let writingTime = 180; // 3 minutes
 
-        createMemBoard();
-
-        // --- Anatomy Matching Logic ---
-        let selectedOrgan = null;
-
-        document.querySelectorAll('.organ-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                if(this.classList.contains('matched')) return;
-                document.querySelectorAll('.organ-btn').forEach(b => b.classList.remove('selected'));
-                this.classList.add('selected');
-                selectedOrgan = this.getAttribute('data-id');
-            });
-        });
-
-        document.querySelectorAll('.num-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                if(this.classList.contains('matched')) return;
-                if(!selectedOrgan) {
-                    this.classList.add('error'); setTimeout(() => this.classList.remove('error'), 400); return;
-                }
-                
-                const matchId = this.getAttribute('data-match');
-                const organEl = document.querySelector(`.organ-btn[data-id="${selectedOrgan}"]`);
-                
-                if(selectedOrgan === matchId) {
-                    this.classList.add('matched');
-                    organEl.classList.add('matched');
-                    organEl.classList.remove('selected');
-                    // Add organ text to number button
-                    this.innerHTML += ` <span class="bg-green-600 text-white px-2 py-1 rounded ml-2 text-sm"><i class="fas fa-check mr-1"></i>${organEl.innerText.trim()}</span>`;
-                    selectedOrgan = null;
-                } else {
-                    this.classList.add('error'); organEl.classList.add('error');
-                    setTimeout(() => { this.classList.remove('error'); organEl.classList.remove('error'); }, 400);
-                }
-            });
-        });
-
-        // --- Trivia Logic ---
-        function checkTrivia(questionNum, btn, isCorrect) {
-            const container = document.getElementById(`trivia-${questionNum}-opts`);
-            const buttons = container.querySelectorAll('.trivia-option');
-            buttons.forEach(b => b.style.pointerEvents = 'none'); // disable all
-
-            if (isCorrect) {
-                btn.classList.add('correct');
-                document.getElementById(`reveal-${questionNum}`).classList.add('active');
+        function updateWritingTimerDisplay() {
+            const m = Math.floor(writingTime / 60).toString().padStart(2, '0');
+            const s = (writingTime % 60).toString().padStart(2, '0');
+            const display = document.getElementById('writing-timer');
+            display.innerText = `${m}:${s}`;
+            
+            if (writingTime <= 10 && writingTime > 0) {
+                display.classList.add('text-red-500');
+                display.classList.remove('text-blue-600');
+            } else if (writingTime === 0) {
+                display.classList.add('animate-ping', 'text-red-600');
+                display.classList.remove('text-red-500');
             } else {
-                btn.classList.add('wrong');
-                // Find correct and highlight
-                buttons.forEach(b => {
-                    if(b.getAttribute('onclick').includes('true')) {
-                        setTimeout(() => {
-                            b.classList.add('correct');
-                            document.getElementById(`reveal-${questionNum}`).classList.add('active');
-                        }, 500);
-                    }
-                });
+                display.classList.remove('text-red-500', 'animate-ping', 'text-red-600');
+                display.classList.add('text-blue-600');
             }
         }
 
-        // --- Food Groups Reveal Logic ---
-        function revealGroup(btn, answer) {
-            const span = btn.querySelector('.group-ans');
-            span.innerText = answer;
-            span.className = "text-sm bg-sky-200 px-3 py-1 rounded text-sky-800 font-bold group-ans";
-            btn.classList.add('border-sky-400');
+        function startWritingTimer() {
+            clearInterval(writingInterval);
+            if (writingTime === 0) writingTime = 180;
+            writingInterval = setInterval(() => {
+                if (writingTime > 0) {
+                    writingTime--;
+                    updateWritingTimerDisplay();
+                } else {
+                    clearInterval(writingInterval);
+                    initAudio();
+                    if(audioInit) noiseSynth.triggerAttackRelease("4n"); // Simple buzzer sound
+                }
+            }, 1000);
         }
 
-        // --- Superfood Reveal Logic ---
-        function revealSuperfood(id) {
-            document.getElementById(id).classList.remove('hidden');
+        function pauseWritingTimer() {
+            clearInterval(writingInterval);
         }
+
+        function resetWritingTimer() {
+            clearInterval(writingInterval);
+            writingTime = 180;
+            updateWritingTimerDisplay();
+        }
+
+        // --- 4. Bingo Logic ---
+        const initialVerbs = [
+            {base: 'be', pp: 'been'}, {base: 'break', pp: 'broken'}, {base: 'buy', pp: 'bought'},
+            {base: 'catch', pp: 'caught'}, {base: 'choose', pp: 'chosen'}, {base: 'do', pp: 'done'},
+            {base: 'drink', pp: 'drunk'}, {base: 'eat', pp: 'eaten'}, {base: 'fall', pp: 'fallen'},
+            {base: 'fly', pp: 'flown'}, {base: 'forget', pp: 'forgotten'}, {base: 'get', pp: 'got (gotten)'},
+            {base: 'give', pp: 'given'}, {base: 'go', pp: 'gone'}, {base: 'hide', pp: 'hidden'},
+            {base: 'know', pp: 'known'}, {base: 'make', pp: 'made'}, {base: 'see', pp: 'seen'},
+            {base: 'speak', pp: 'spoken'}, {base: 'steal', pp: 'stolen'}, {base: 'swim', pp: 'swum'},
+            {base: 'take', pp: 'taken'}, {base: 'think', pp: 'thought'}, {base: 'write', pp: 'written'}
+        ];
+
+        let availableVerbs = [];
+        let calledVerbs = [];
+
+        function initBingo() {
+            availableVerbs = [...initialVerbs];
+            calledVerbs = [];
+            
+            // Sort PP alphabetically for the word bank display
+            const sortedPP = [...initialVerbs].map(v => v.pp).sort();
+            
+            const bank = document.getElementById('bingo-word-bank');
+            bank.innerHTML = '';
+            sortedPP.forEach(pp => {
+                const div = document.createElement('div');
+                div.className = 'bingo-cell';
+                div.innerText = pp;
+                bank.appendChild(div);
+            });
+
+            updateCallerUI();
+        }
+
+        function callNextVerb() {
+            if(availableVerbs.length === 0) {
+                document.getElementById('current-verb').innerText = "Game Over!";
+                document.getElementById('call-verb-btn').disabled = true;
+                return;
+            }
+            initAudio();
+            if(audioInit) {
+                tickSynth.triggerAttackRelease("C6", "16n");
+            }
+
+            // Pick random
+            const idx = Math.floor(Math.random() * availableVerbs.length);
+            const verb = availableVerbs[idx];
+            
+            // Remove from available, add to called
+            availableVerbs.splice(idx, 1);
+            calledVerbs.unshift(verb); // add to beginning so newest is on top
+
+            updateCallerUI();
+        }
+
+        function updateCallerUI() {
+            const display = document.getElementById('current-verb');
+            const list = document.getElementById('called-verbs-list');
+            const count = document.getElementById('verb-count');
+
+            if(calledVerbs.length > 0) {
+                // Animate display
+                display.classList.add('scale-110', 'text-pink-400');
+                display.innerText = calledVerbs[0].base.toUpperCase();
+                setTimeout(() => display.classList.remove('scale-110', 'text-pink-400'), 300);
+
+                // Update list
+                list.innerHTML = '';
+                calledVerbs.forEach((v, i) => {
+                    const span = document.createElement('span');
+                    // Style the newest one differently
+                    if(i === 0) {
+                        span.className = 'bg-pink-500 text-white font-bold px-3 py-1 rounded text-sm shadow-sm';
+                    } else {
+                        span.className = 'bg-indigo-800 text-indigo-200 px-3 py-1 rounded text-sm';
+                    }
+                    span.innerHTML = `<strong>${v.base}</strong> &rarr; ${v.pp}`;
+                    list.appendChild(span);
+                });
+            } else {
+                display.innerText = "Ready?";
+                list.innerHTML = '';
+            }
+
+            count.innerText = `${calledVerbs.length}/${initialVerbs.length} Called`;
+        }
+
+        function resetBingo() {
+            if(confirm("Are you sure you want to reset the Bingo game?")) {
+                document.getElementById('call-verb-btn').disabled = false;
+                initBingo();
+            }
+        }
+
+        // Run on load
+        window.onload = () => {
+            initBingo();
+        };
 
     </script>
 </body>
